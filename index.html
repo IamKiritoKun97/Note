@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>60monthrestart | Professional</title>
+    <!-- Importing Inter Font for clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* --- Professional Palette (Slate & Blue) --- */
+            /* Backgrounds */
+            --bg-body: #f1f5f9;       /* Slate 100 - Cool light gray */
+            --bg-surface: #ffffff;    /* Pure White */
+            --bg-sidebar: #ffffff;
+            
+            /* Text Colors */
+            --text-main: #334155;     /* Slate 700 - Softer than black */
+            --text-heading: #0f172a;  /* Slate 900 - Deep, rich dark */
+            --text-muted: #94a3b8;    /* Slate 400 */
+            
+            /* Brand / Action Colors */
+            --brand-dark: #1e293b;    /* Slate 800 - Used for brand text */
+            --primary: #2563eb;       /* Royal Blue - Primary Action */
+            --primary-hover: #1d4ed8; /* Darker Blue */
+            --primary-light: #eff6ff; /* Very light blue background for accents */
+            
+            /* UI Elements */
+            --border: #e2e8f0;        /* Slate 200 */
+            --danger: #ef4444;        /* Red 500 */
+            --danger-bg: #fef2f2;
+            --success: #10b981;
+            
+            /* Dimensions & Effects */
+            --sidebar-width: 420px;
+            --radius: 8px;
+            --header-height: 64px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            
+            --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            height: 100vh;
+            overflow: hidden; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Components --- */
+        .hidden { display: none !important; }
+        
+        /* Buttons - Refined */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 0.6rem 1.1rem; border-radius: var(--radius); font-weight: 500; cursor: pointer;
+            border: 1px solid transparent; transition: all 0.2s ease; font-size: 0.875rem;
+            line-height: 1.25rem;
+        }
+        
+        .btn-primary { 
+            background: var(--primary); 
+            color: white; 
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); 
+        }
+        .btn-primary:hover { 
+            background: var(--primary-hover); 
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .btn-edit { 
+            background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; 
+        }
+        .btn-edit:hover { background: #fef3c7; }
+
+        .btn-ghost { 
+            background: transparent; color: var(--text-muted); 
+        }
+        .btn-ghost:hover { 
+            background: var(--bg-body); color: var(--text-heading); 
+        }
+        
+        .btn-outline { 
+            background: white; border: 1px solid var(--border); color: var(--text-main); 
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-outline:hover { 
+            border-color: var(--primary); color: var(--primary); background: var(--primary-light); 
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            height: var(--header-height); 
+            background: var(--bg-surface); 
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 2rem;
+            position: fixed; top: 0; width: 100%; z-index: 20;
+            box-shadow: var(--shadow-sm);
+        }
+        .brand { 
+            font-weight: 700; font-size: 1.25rem; color: var(--brand-dark); 
+            display: flex; align-items: center; gap: 10px; letter-spacing: -0.03em; 
+        }
+        .brand span {
+            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Layout --- */
+        .main-container {
+            margin-top: var(--header-height); 
+            height: calc(100vh - var(--header-height)); 
+            display: flex; justify-content: center; padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .editor-card {
+            background: var(--bg-surface); border-radius: 16px; 
+            border: 1px solid var(--border); padding: 3rem; width: 100%; max-width: 900px;
+            display: flex; flex-direction: column; position: relative;
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .editor-card:focus-within {
+            box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
+        }
+        
+        /* Edit Mode Indicator */
+        .editor-card.editing-mode { 
+            border-color: #fcd34d;
+            box-shadow: 0 0 0 4px #fef3c7;
+        }
+
+        .editor-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 2rem; 
+            padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+        }
+        
+        .editor-title { 
+            font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text-heading); 
+        }
+        
+        #editor-status-bar {
+            margin-top: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.85rem; color: var(--text-muted); font-weight: 500;
+        }
+
+        .status-item { 
+            display: flex; align-items: center; gap: 8px; 
+            background: var(--bg-body); padding: 6px 12px; border-radius: 20px;
+        }
+        .status-value { color: var(--primary); font-weight: 700; }
+
+        textarea.main-input {
+            width: 100%; min-height: 500px; border: none; resize: none; outline: none;
+            font-family: var(--font-stack); font-size: 1.05rem; line-height: 1.7; color: var(--text-heading);
+            background: transparent;
+        }
+        textarea.main-input::placeholder { color: #cbd5e1; font-weight: 300; }
+
+        /* --- Sidebar --- */
+        .overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(2px);
+            z-index: 40; opacity: 0; visibility: hidden; transition: 0.3s;
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        .sidebar {
+            position: fixed; top: 0; bottom: 0; left: 0; width: var(--sidebar-width);
+            background: var(--bg-sidebar); z-index: 50; transform: translateX(-100%);
+            transition: 0.3s cubic-bezier(0.2, 0, 0, 1); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; 
+            box-shadow: 20px 0 40px -10px rgba(0,0,0,0.05);
+        }
+        .sidebar.active { transform: translateX(0); }
+
+        .sidebar-header { 
+            padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-surface); 
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        
+        .sidebar-title {
+            font-weight: 700; font-size: 1.1rem; color: var(--text-heading); letter-spacing: -0.01em;
+        }
+
+        .search-input {
+            width: 100%; padding: 12px; border-radius: var(--radius); border: 1px solid var(--border);
+            font-family: inherit; background: var(--bg-body); transition: 0.2s; color: var(--text-main);
+        }
+        .search-input:focus { 
+            background: white; border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px var(--primary-light); 
+        }
+
+        .notes-list { 
+            flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 16px; 
+            background: #f8fafc;
+        }
+        
+        /* Modern Note Card */
+        .note-card {
+            background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem;
+            transition: all 0.2s ease; cursor: pointer; position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+        .note-card:hover { 
+            transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #cbd5e1; 
+        }
+        
+        .note-meta { 
+            font-size: 0.75rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.02em;
+            display: flex; justify-content: space-between; margin-bottom: 0.75rem;
+        }
+        
+        .note-preview { 
+            font-size: 0.9rem; color: var(--text-main); max-height: 80px; overflow: hidden; 
+            margin-bottom: 1rem; white-space: pre-wrap; line-height: 1.5;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+
+        .note-actions { 
+            display: flex; justify-content: flex-end; gap: 8px; 
+            border-top: 1px solid #f1f5f9; padding-top: 10px;
+        }
+
+        .action-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 6px; border: 1px solid transparent; cursor: pointer;
+            transition: all 0.2s; background: white; color: var(--text-muted);
+        }
+        .action-btn:hover { border-color: var(--border); color: var(--primary); background: var(--primary-light); }
+        .action-btn.delete:hover { border-color: #fecaca; color: var(--danger); background: var(--danger-bg); }
+        
+        .action-tooltip { position: relative; }
+        .action-tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            background: var(--text-heading); color: white; padding: 4px 8px; font-size: 11px; font-weight: 500;
+            border-radius: 4px; white-space: nowrap; margin-bottom: 6px; pointer-events: none;
+        }
+
+        /* --- Modals --- */
+        .modal {
+            position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none;
+        }
+        .modal.show { opacity: 1; visibility: visible; pointer-events: auto; }
+        .modal-bg { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); }
+        
+        .modal-content {
+            position: relative; background: white; width: 90%; max-width: 700px; padding: 0;
+            border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
+            transform: translateY(15px); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-height: 85vh; overflow: hidden; display: flex; flex-direction: column;
+        }
+        .modal.show .modal-content { transform: translateY(0); }
+        
+        .modal-header {
+            padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+            background: #f8fafc;
+        }
+        .modal-header h3 { margin: 0; color: var(--text-heading); font-size: 1.2rem; font-weight: 600; }
+        
+        .modal-body { padding: 2rem; overflow-y: auto; }
+
+        /* ID Grid Styling */
+        .pid-group { margin-bottom: 2rem; }
+        .pid-group-title { 
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; 
+            color: var(--primary); font-weight: 700; margin-bottom: 12px; 
+            border-bottom: 2px solid var(--primary-light); padding-bottom: 6px;
+        }
+        .pid-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        
+        .pid-item { 
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 14px; font-size: 0.9rem; cursor: pointer; border-radius: 6px; 
+            background: #f8fafc; border: 1px solid var(--border); color: var(--text-main); font-weight: 500;
+        }
+        .pid-item:hover { background: white; border-color: var(--primary); color: var(--primary); box-shadow: var(--shadow-sm); }
+        .pid-item.duplicate { color: var(--danger); background: var(--danger-bg); border-color: #fca5a5; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px);
+            background: var(--text-heading); color: white; padding: 12px 28px; border-radius: 50px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 200;
+            font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 10px;
+        }
+        .toast.show { transform: translate(-50%, 0); }
+        .toast.warning { background: var(--danger); }
+        
+        /* File Input Hidden */
+        input[type="file"] { display: none; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; border: 2px solid transparent; background-clip: content-box; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; border: 2px solid transparent; background-clip: content-box; }
+    </style>
+</head>
+<body>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar History -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="sidebar-title">History</span>
+                <button class="btn-ghost" onclick="toggleSidebar()" style="padding: 6px; border-radius: 50%;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search records...">
+        </div>
+        <div class="notes-list" id="notesList"></div>
+    </aside>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+            <button class="btn-ghost" onclick="toggleSidebar()" title="View History (Press 'S')" style="padding: 8px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                </svg>
+            </button>
+            <div class="brand">
+                <span>60monthrestart</span>
+            </div>
+        </div>
+        <div style="display:flex; gap:0.8rem;">
+            <button class="btn btn-outline" onclick="openAbbrModal()">Abbreviations</button>
+            <button class="btn btn-outline" onclick="renderPatientIDsModal(false)">View IDs</button>
+            <button class="btn btn-outline" onclick="exportData()">Export</button>
+            <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">Import</button>
+            <input type="file" id="fileInput" accept=".txt" class="hidden">
+        </div>
+    </nav>
+
+    <!-- Main Editor -->
+    <main class="main-container">
+        <div class="editor-card" id="editorCard">
+            <div class="editor-header">
+                <div>
+                    <span id="modeTitle" class="editor-title">New Entry</span>
+                    <button id="cancelEditBtn" class="btn btn-ghost hidden" onclick="cancelEditMode()" style="font-size:0.75rem; color:var(--danger); margin-left: 10px;">Cancel Edit</button>
+                </div>
+                <button id="saveBtn" class="btn btn-primary" onclick="handleSaveAction()" title="Ctrl + S">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Save Note
+                </button>
+            </div>
+            
+            <textarea id="notepad" class="main-input" placeholder="Type or Paste Patient Info here...&#10;Shortcuts expand with Space.&#10;Press 'Ctrl+S' to save."></textarea>
+            
+            <div id="editor-status-bar">
+                <div class="status-item">
+                    <span style="color:var(--text-muted)">Active IDs:</span>
+                    <span id="activeCountEl" class="status-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span style="color:var(--text-muted)">Total Saved IDs:</span>
+                    <span id="totalSavedCountEl" class="status-value">0</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODALS -->
+    
+    <!-- 1. Milestone Greeting Modal -->
+    <div id="greetingModal" class="modal">
+        <div class="modal-bg" onclick="this.parentElement.classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 500px; text-align:center;">
+            <div style="padding: 2.5rem;">
+                <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                </div>
+                <h2 id="greetingTitleEl" style="color:var(--text-heading); font-weight:700; margin: 0 0 1rem 0;">Milestone Reached!</h2>
+                <p id="greetingMessageEl" style="font-size:1.05rem; line-height:1.6; color:var(--text-main); margin-bottom: 2rem;"></p>
+                <button class="btn btn-primary" style="width: 100%;" onclick="document.getElementById('greetingModal').classList.remove('show')">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Patient IDs List Modal -->
+    <div id="patientIDsModal" class="modal">
+        <div class="modal-bg" onclick="this.parentElement.classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Patient IDs Summary</h3>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="copyAllIDs()">Copy All</button>
+                    <button class="btn btn-ghost" onclick="document.getElementById('patientIDsModal').classList.remove('show')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="patientIDsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Abbreviation Manager Modal -->
+    <div id="abbrModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('abbrModal').classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Abbreviation Manager</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('abbrModal').classList.remove('show')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.9rem; color:var(--text-main); margin-bottom:1.5rem; line-height: 1.5;">
+                    Manage your shortcuts here. Typing the shortcut followed by <strong>Space</strong> will automatically expand the text in the editor.
+                </p>
+                
+                <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; padding: 2rem; background:var(--bg-body); border-radius:12px; border: 1px dashed var(--border);">
+                    <button class="btn btn-primary" onclick="exportAbbreviations()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Export JSON
+                    </button>
+                    <button class="btn btn-outline" onclick="document.getElementById('abbrInput').click()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Import JSON
+                    </button>
+                    <input type="file" id="abbrInput" accept=".json" class="hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Action Saved</div>
+
+    <script>
+        /* ----------------------------------------------------------------
+           DATA: Default Abbreviations
+           ---------------------------------------------------------------- */
+        const DEFAULT_ABBRS = [
+            {"abbr": "vm","expansion": "Voicemail"},
+            {"abbr": "gtg","expansion": "got to go"},
+            {"abbr": "brb","expansion": "be right back"},
+            {"abbr": ".sent","expansion": "[Scheduling] Updated both work order and pick-up/exchange ticket and sent it to dispatch DATE. "},
+            {"abbr": "rek","expansion": "REKEYED SO#CODE: Rekey to show the rental equipment the patient has.\n\nPT NAME: CODE\nPT ID: CODE\nSALES ORDER: CODE\nBT DATABASE:"},
+            {"abbr": "rul.met","expansion": "RUL MET E1390 DATE PLEASE VOID ANY UNPAID CLAIMS  \nRUL MET E1392 DATE PLEASE VOID ANY UNPAID CLAIMS  \nRUL MET E0431 DATE PLEASE VOID ANY UNPAID CLAIMS  \nRUL MET K0738 DATE PLEASE VOID ANY UNPAID CLAIMS \n--------------------------------------------- \n5-YR RUL is not due until the DATE. Please do not schedule it until then. / 60Month Restart  \nPlease have patient sign 60-month letter when completing exchange/restart located in OTL.  \nCSR, Scheduling  raymond.tariao@adapthealth.com \n--------------------------------------------- \nBL-E1390-5LPM \nBL-E1390-10LPM \nBL-E1392 \nOXY PORTABILITY \nBL-E0443 \nBL-K0738"},
+            {"abbr": "1.4","expansion": "[Scheduling] Sales order #CODE has been sitting in 1.4 pending scheduling for CODE days, created new order #CODE to reduce the aging records, no additional action is needed."},
+            {"abbr": "1.1","expansion": "[Scheduling] Sales order #CODE has been sitting in 1.1 Intake processing for CODE days, created new order #CODE to reduce the aging records, no additional action is needed. "},
+            {"abbr": "walker","expansion": "[Scheduling] The patient's restart is managed directly by the local branch representatives/branch manager."},
+            {"abbr": "upl","expansion": "What’s Needed: SCHEDULING/RESTART | Note/s: Uploaded workload dated DATE, we received signed SWO. New order has been created, no further action is needed.\n\nOxygen RUL\nVent Performance Check\nIntake Document\nPickup Ticket "},
+            {"abbr": "AC","expansion": "Aerocare"},
+            {"abbr": "stl","expansion": "StLukes"},
+            {"abbr": "Stl","expansion": "StLukes"},
+            {"abbr": "STl","expansion": "StLukes"},
+            {"abbr": "stL","expansion": "StLukes"},
+            {"abbr": ".s","expansion": "StLukes"},
+            {"abbr": ".S","expansion": "StLukes"},
+            {"abbr": "St","expansion": "StLukes"},
+            {"abbr": "sT","expansion": "StLukes"},
+            {"abbr": "ST","expansion": "StLukes"},
+            {"abbr": "st","expansion": "StLukes"},
+            {"abbr": "sched","expansion": "[Scheduling]"},
+            {"abbr": "sc","expansion": "[Scheduling]"},
+            {"abbr": "OTL","expansion": "[Scheduling] The patient signed the delivery ticket, pick-up ticket and 60month letter but there is an error in sales order #CODE, [ERROR: REASON_HERE] updated it to avoid getting this account as pushback."},
+            {"abbr": "ARP","expansion": "[Scheduling] Contacted the patient multiple times to get their account restarted but unsuccessful, they tried to drive by as well multiple times but still no luck. Moved to Branch Review.\nVoided Sales Order - CODE\nDeleted - Pickup/Exchange - CODE to avoid accidentaly pick-up that will result on no more active rentals when in fact the delivery was unsuccessful. \n\n________________________________________________________ \n\nItem(s): E1390 &\nSales Order(s): \nRCM Team: 60Month Restart\nWhat is needed to resolve: The patient must sign the 60-month letter in order to continue receiving our services.\nContact Numbers Attempted: \nNumber of Attempts Made: 3\nAdditional Information: [Scheduling] Contacted the patient multiple times to get their account restarted but unsuccessful, they tried to drive by as well multiple times but still no luck. Moved to Branch Review.\nVoided Sales Order - CODE\nDeleted - Pickup/Exchange - CODE to avoid accidentaly pick-up that will result on no more active rentals when in fact the delivery was unsuccessful. \n\nFor where to direct your questions, please review the sales order Stop Reason. If the Stop Reason is:\nARP-Branch Review -  Contact the RCM Team listed above.\nARP-DOD Branch Review - Contact the local branch/region.\nARP 1-ASSET RECOVERY - Contact the Asset Recovery Team at assetrecovery@adapthealth.com.\n\nIf still unsure where to direct questions, reach out to your leadership and/or local RCM contacts."},
+            {"abbr": "fio2","expansion": "What is FiO2?\nFiO2 stands for fraction of inspired oxygen (O2). Wearing supplemental oxygen increases FiO2 from 21 percent to anywhere between 24 and 100 percent oxygen, depending on your oxygen source. Medical facilities have the capability of increasing your FiO2 to virtually 100 percent, while home units, like oxygen concentrators, deliver from 24 to 60 percent FIO2.\n\nContinuous-Flow Oxygen Liters Per Minute (LPM) to FiO2:\nWhat FiO2 is 0 LPM of supplemental oxygen?\nAt room air, the approximate FiO2 is 21%.\n\nWhat FiO2 is 1 LPM of supplemental oxygen?\nAt 1 LPM, the approximate FiO2 is 24%.\n\nWhat FiO2 is 2 LPM of supplemental oxygen?\nAt 2 LPM, the approximate FiO2 is 28%.\n\nWhat FiO2 is 3 LPM of supplemental oxygen?\nAt 3 LPM, the approximate FiO2 is 32%.\n\nWhat FiO2 is 4 LPM of supplemental oxygen?\nAt 4 LPM, the approximate FiO2 is 36%.\n\nWhat FiO2 is 5 LPM of supplemental oxygen?\nAt 5 LPM, the approximate FiO2 is 40%.\n\nWhat FiO2 is 6 LPM of supplemental oxygen?\nAt 6 LPM, the approximate FiO2 is 44%.\n\nWhat FiO2 is 7 LPM of supplemental oxygen?\nAt 7 LPM, the approximate FiO2 is 48%.\n\nWhat FiO2 is 8 LPM of supplemental oxygen?\nAt 8 LPM, the approximate FiO2 is 52%.\n\nWhat FiO2 is 9 LPM of supplemental oxygen?\nAt 9 LPM, the approximate FiO2 is 56%.\n\nWhat FiO2 is 10 LPM of supplemental oxygen?\nAt 10 LPM, the approximate FiO2 is 60%."},
+            {"abbr": "LINE","expansion": "____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n____________________________________________________________________\nStLukes\n\n\n"},
+            {"abbr": "intro.","expansion": "Hello,\n\nI hope this email finds you well. I am writing to request confirmation on whether the address provided for our patient falls within your service area. \n\n[STATE YOUR REASON HERE]\n\nPatient Information:  \n• CODE  \n• SO#CODE  \n• PU ticket#CODE  \n\nIf further details are required, please let us know at your earliest convenience. Your prompt attention to this matter is appreciated.\n\nThank you,"},
+            {"abbr": "ft","expansion": "What’s needed: \n\n| Item/s: E1390 & \n| RUL Date: \n\n| Doctor call: 0/5\n| GoScripts: 0/2\n| Parachute: 0/2\n| Patient Call: 0/3\n| Faxes sent: 0/5\n\n| Insurance: \n| Policy Number: \n| Checked Eligibility: Yes No\n| DNC/DNF: Yes No\n| GoScripts: Yes \n| Parachute: Yes \n\n| Doctor: \n(PECOS)\n| NPI: \n| Phone Number: \n| Fax Number: \n\n| Evaluation/Test Date: \nRoom air at rest: CODE%\nRoom air during exertion: CODE%\nSpO2 while wearing 02 at 2LPM with exertion: CODE%\n| Diagnoses: J44.9\n| Usage: 2LPM Oxygen via NC Continuous/Nocturnal\n| Can SWO be used: Yes No\n\n| Note/s: \nWe have valid testing, updated the clinical tab, and moved the testing to the OXRUL lists, but we cannot send the request for SWO/CMN until DATE. Flipped SB to Election pending Q.   "},
+            {"abbr": "STL","expansion": "StLukes"},
+            {"abbr": "humana","expansion": "[Scheduling] The insurance policy has been updated to reflect the correct payer’s name, as verified through the Humana Lookup."},
+            {"abbr": "arp","expansion": "[Scheduling] Contacted the patient multiple times to get their account restarted but unsuccessful, they tried to drive by as well multiple times but still no luck. Moved to Branch Review.\nVoided Sales Order - CODE\nDeleted - Pickup/Exchange - CODE to avoid accidental pick-up that will result on no more active rentals when in fact the delivery was unsuccessful. \n\n________________________________________________________ \n\nItem(s): E1390 &\nSales Order(s): \nRCM Team: 60Month Restart\nWhat is needed to resolve: The patient must sign the 60-month letter in order to continue receiving our services.\nContact Numbers Attempted: \nNumber of Attempts Made: 3\nAdditional Information: Contacted the patient multiple times to get their account restarted but unsuccessful, they tried to drive by as well multiple times but still no luck. Moved to Branch Review.\n\nFor where to direct your questions, please review the sales order Stop Reason. If the Stop Reason is:\nARP-Branch Review -  Contact the RCM Team listed above.\nARP-DOD Branch Review - Contact the local branch/region.\nARP 1-ASSET RECOVERY - Contact the Asset Recovery Team at assetrecovery@adapthealth.com.\n\nIf still unsure where to direct questions, reach out to your leadership and/or local RCM contacts."},
+            {"abbr": "nonm","expansion": "What's needed: Scheduling/ 60 Month Restart \n| RUL: BLANK \n| SWO Expiration: BLANK \n| Signed date: BLANK \n| Item/s: E1390 \n| Insurance: BLANK \n| Comment/s: We got valid testing and received signed SWO by BLANK. Logged. \nCreated New Sales Order - BLANK. \nNew Pickup/Exchange - BLANK. \nSB flipped to Restart Scheduled."},
+            {"abbr": "med","expansion": "What's needed: Scheduling/ 60 Month Restart \n| RUL: BLANK \n| SWO Expiration: BLANK \n| Signed date: BLANK \n| Item/s: E1390 \n| Insurance: Medicare\n| Comment/s: We got valid testing and received signed SWO by BLANK. Instructed not to log SWO if insurance is under Medicare. \nCreated New Sales Order - BLANK. \nNew Pickup/Exchange - BLANK. \nSB flipped to Restart Scheduled. \n\nRUL MET E1390 INITIAL\nRUL MET E1392 INITIAL\nRUL MET E0431 INITIAL\nRUL MET K0738 INITIAL"},
+            {"abbr": "2.6","expansion": "[Scheduling] Dispatch Rejection for Sales Order #CODE, as per technician \"COMMENT\" "},
+            {"abbr": "clinical.notes","expansion": "IMPORTANT!\n\nThe answer keys are located on the back of the sheet. We kindly request that the doctor accurately and completely fill out the form for insurance billing purposes on behalf of the patient. Please ensure that the dates and signature are in the same format.\n\nPlease have DOCTOR sign and fax it back to (484) 362-1480 at your earliest convenience.\n\nAdditionally, we kindly ask that the doctor provide the patient's CLINICAL NOTES within 6 months of the date of service. This documentation is essential for ongoing insurance and medical review purposes.\n\nFeel free to call us at (484) 567-0666 if you have any questions.  \nThank you for your prompt attention!\n\n---\n\nPhone: 4845670666 \nFax: 4843621480"}
+        ];
+
+        /* ----------------------------------------------------------------
+           STATE & CONFIGURATION
+           ---------------------------------------------------------------- */
+        const SEPARATOR = "____________________________________________________________________";
+        const STORAGE_KEY = "60month_db";
+        const ABBR_KEY = "60month_abbr";
+        
+        let notesData = [];
+        let currentEditingId = null;
+        let abbreviationList = [];
+
+        // Logic State
+        let milestoneTitles = ["Great Job!", "On Fire!", "Unstoppable!", "Legendary!", "Machine Mode!"];
+        let milestoneGreetingIndex = 0;
+        let currentUserName = "User";
+        let patientMilestonesReached = []; 
+        let knownDuplicateIDsForAlert = new Set(); // Session based duplicate tracking
+
+        /* ----------------------------------------------------------------
+           INITIALIZATION
+           ---------------------------------------------------------------- */
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotes();
+            loadLogicState();
+            loadAbbreviations();
+            updateTotalPatientCount(); 
+
+            // Listeners
+            document.getElementById('searchInput').addEventListener('input', (e) => renderSidebar(e.target.value));
+            document.getElementById('fileInput').addEventListener('change', handleImport);
+            document.getElementById('abbrInput').addEventListener('change', handleAbbrImport);
+            
+            const notepad = document.getElementById('notepad');
+            notepad.addEventListener('input', updatePatientCountAndCheckMilestonesForActiveNote);
+            notepad.addEventListener('paste', handleNotepadPasteForPatientInfo);
+            
+            // Abbreviation Space Trigger
+            notepad.addEventListener('keyup', (e) => {
+                if (e.key === ' ') handleSpaceExpansion(e.target);
+            });
+
+            // GLOBAL KEYBOARD SHORTCUTS
+            document.addEventListener('keydown', (e) => {
+                // CTRL+S to Save
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    e.preventDefault();
+                    handleSaveAction();
+                    return;
+                }
+
+                // 'S' to Toggle Sidebar (only if not typing in inputs)
+                const tag = document.activeElement.tagName.toLowerCase();
+                if (e.key.toLowerCase() === 's' && tag !== 'textarea' && tag !== 'input') {
+                    e.preventDefault();
+                    toggleSidebar();
+                }
+            });
+        });
+
+        /* ----------------------------------------------------------------
+           CORE WORKFLOW
+           ---------------------------------------------------------------- */
+
+        function handleSaveAction() {
+            const content = document.getElementById('notepad').value;
+            if(!content.trim()) return showToast("Cannot save empty note");
+
+            if(currentEditingId) {
+                // UPDATE
+                const note = notesData.find(n => n.id === currentEditingId);
+                if(note) {
+                    note.content = content;
+                    saveNotesToStorage();
+                    showToast("Record Updated");
+                    cancelEditMode();
+                }
+            } else {
+                // CREATE (Handle Splits)
+                const blocks = content.split(SEPARATOR).filter(b => b.trim() !== "");
+                blocks.reverse().forEach(block => {
+                    notesData.unshift({
+                        id: Date.now() + Math.random(),
+                        content: block.trim(),
+                        timestamp: new Date().toLocaleString(),
+                        lastPatientCountForMilestone: 0 
+                    });
+                });
+                
+                saveNotesToStorage();
+                showToast(`${blocks.length} Entry(s) Saved`);
+                document.getElementById('notepad').value = "";
+                
+                renderSidebar();
+                // If saved via shortcut and sidebar is hidden, maybe show it? Optional. Keeping logic simple.
+            }
+            updatePatientCountAndCheckMilestonesForActiveNote(); 
+            updateTotalPatientCount();
+        }
+
+        function startEditing(id) {
+            const note = notesData.find(n => n.id === id);
+            if(!note) return;
+
+            const sidebar = document.getElementById('sidebar');
+            if(sidebar.classList.contains('active')) toggleSidebar();
+
+            const notepad = document.getElementById('notepad');
+            notepad.value = note.content;
+            notepad.focus();
+
+            currentEditingId = id;
+            document.getElementById('editorCard').classList.add('editing-mode');
+            document.getElementById('modeTitle').textContent = "Editing Record";
+            document.getElementById('modeTitle').style.color = "var(--primary)";
+            
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.textContent = "Update Note";
+            saveBtn.className = "btn btn-edit";
+
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+            updatePatientCountAndCheckMilestonesForActiveNote();
+        }
+
+        function cancelEditMode() {
+            currentEditingId = null;
+            document.getElementById('notepad').value = "";
+            
+            document.getElementById('editorCard').classList.remove('editing-mode');
+            document.getElementById('modeTitle').textContent = "New Entry";
+            document.getElementById('modeTitle').style.color = "var(--text-heading)";
+
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save Note`;
+            saveBtn.className = "btn btn-primary";
+
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+            updatePatientCountAndCheckMilestonesForActiveNote();
+        }
+
+        /* ----------------------------------------------------------------
+           ABBREVIATION LOGIC
+           ---------------------------------------------------------------- */
+
+        function loadAbbreviations() {
+            const stored = localStorage.getItem(ABBR_KEY);
+            if (stored) {
+                try { abbreviationList = JSON.parse(stored); } catch(e) { abbreviationList = DEFAULT_ABBRS; }
+            } else {
+                abbreviationList = DEFAULT_ABBRS;
+            }
+        }
+
+        function findExpansion(word) {
+            const match = abbreviationList.find(item => item.abbr.toLowerCase() === word.toLowerCase());
+            return match ? match.expansion : null;
+        }
+
+        function handleSpaceExpansion(textarea) {
+            const cursor = textarea.selectionStart;
+            const text = textarea.value;
+            const beforeCursor = text.slice(0, cursor);
+            const match = /(\S+)\s$/.exec(beforeCursor);
+
+            if (match) {
+                const abbr = match[1];
+                const expansion = findExpansion(abbr);
+
+                if (expansion) {
+                    const newBefore = beforeCursor.slice(0, match.index) + expansion + " ";
+                    const afterCursor = text.slice(cursor);
+                    textarea.value = newBefore + afterCursor;
+                    textarea.selectionStart = textarea.selectionEnd = newBefore.length;
+                    updatePatientCountAndCheckMilestonesForActiveNote();
+                }
+            }
+        }
+
+        function expandAllAbbreviationsInText(text) {
+            return text.split(' ').map(token => {
+                const exp = findExpansion(token);
+                return exp ? exp : token;
+            }).join(' ');
+        }
+
+        function handleNotepadPasteForPatientInfo(event) {
+            const notepad = event.target;
+            const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+            const patientInfoRegex = /^([A-Z\s,.\-]+)\s*\n\s*Patient ID\s*(\d+)\s*\nDOB\s*(\d{1,2}\/\d{1,2}\/\d{2,4})\s*$/im;
+            const match = pastedText.match(patientInfoRegex);
+            
+            if (match) {
+                event.preventDefault();
+                const formattedString = `${match[1].trim()}\nPatient ID ${match[2].trim()}\nDOB ${match[3].trim()}`;
+                insertAtCursor(notepad, formattedString);
+                updatePatientCountAndCheckMilestonesForActiveNote();
+                return;
+            }
+            
+            const expanded = expandAllAbbreviationsInText(pastedText);
+            if(expanded !== pastedText){
+                event.preventDefault();
+                insertAtCursor(notepad, expanded);
+                updatePatientCountAndCheckMilestonesForActiveNote();
+            }
+        }
+
+        /* ----------------------------------------------------------------
+           ID EXTRACTION & COUNTERS
+           ---------------------------------------------------------------- */
+
+        function extractPatientIDsFromText(text){
+            const ids = [];
+            if(!text) return ids;
+            const regex = /\bPatient ID\s*(\d+)\b/ig;
+            for (const m of text.matchAll(regex)) { if (m && m[1]) ids.push(m[1]); }
+            return ids;
+        }
+
+        function extractPatientIDsGrouped(text){
+            const lines = (text || '').split(/\r?\n/);
+            const groups = { "StLukes": [], "Aerocare": [], "OHH": [] };
+            let cur = null;
+            const sr = /^(stl|stlukes)$/i, ar = /^(aerocare|ac|aero)$/i, or = /^(ohh)$/i;
+            for(const ln of lines){
+                const tr = ln.trim();
+                if(sr.test(tr)) cur = "StLukes";
+                else if(ar.test(tr)) cur = "Aerocare";
+                else if(or.test(tr)) cur = "OHH";
+                else {
+                    const m = /\bPatient ID\s*(\d+)\b/i.exec(tr);
+                    if(m && cur) groups[cur].push(m[1]);
+                }
+            }
+            return groups;
+        }
+
+        // --- Active Note Counter ---
+        function updatePatientCountAndCheckMilestonesForActiveNote(){
+            const activeContent = document.getElementById('notepad').value;
+            const activeCountEl = document.getElementById('activeCountEl');
+            const greetingModal = document.getElementById('greetingModal');
+            
+            const ids = extractPatientIDsFromText(activeContent || '');
+            const curCount = ids.length;
+            
+            activeCountEl.textContent = curCount;
+
+            // Milestones Logic
+            let activeObj = currentEditingId ? notesData.find(n=>n.id===currentEditingId) : { lastPatientCountForMilestone: 0 };
+            if(!activeObj) activeObj = { lastPatientCountForMilestone: 0 };
+            
+            if(curCount > activeObj.lastPatientCountForMilestone){
+                let trigMs = -1;
+                const spMs = [10,20,30,40,50];
+                for(const m of spMs){ if(curCount>=m && !patientMilestonesReached.includes(m)){ trigMs = m; break; } }
+                if(curCount>50){
+                    let ct = Math.floor(curCount/10)*10;
+                    if(ct>50 && !patientMilestonesReached.includes(ct) && (trigMs===-1 || ct>trigMs)) trigMs = ct;
+                }
+                if(trigMs !== -1){
+                    milestoneGreetingIndex = (milestoneGreetingIndex+1) % milestoneTitles.length;
+                    document.getElementById('greetingMessageEl').innerHTML = `Congratulations ${currentUserName}, you've logged <strong>${trigMs}</strong> patient IDs in this note!`;
+                    document.getElementById('greetingTitleEl').textContent = milestoneTitles[milestoneGreetingIndex];
+                    greetingModal.classList.add('show');
+                    patientMilestonesReached.push(trigMs);
+                    saveLogicState();
+                }
+            }
+            activeObj.lastPatientCountForMilestone = curCount;
+            
+            // Check Duplicates in Realtime for Toast
+            checkForNewDuplicatesRealtime(activeContent || '');
+        }
+
+        // --- Total Saved Counter ---
+        function updateTotalPatientCount() {
+            const totalCountEl = document.getElementById('totalSavedCountEl');
+            let total = 0;
+            notesData.forEach(note => {
+                const ids = extractPatientIDsFromText(note.content || '');
+                total += ids.length;
+            });
+            totalCountEl.textContent = total;
+        }
+
+        // --- Duplicate Detection (Toast) ---
+        function checkForNewDuplicatesRealtime(curTxt){
+            const grps = extractPatientIDsGrouped(curTxt);
+            const allIds = [ ...grps["StLukes"], ...grps["Aerocare"], ...grps["OHH"] ];
+            
+            const counts = {};
+            allIds.forEach(id => counts[id] = (counts[id] || 0) + 1);
+
+            for (const id in counts) {
+                if (counts[id] > 1) {
+                    if (!knownDuplicateIDsForAlert.has(id)) {
+                        // It is a new duplicate we haven't warned about yet
+                        showToast(`Duplicate ID Detected: ${id}`, true);
+                        knownDuplicateIDsForAlert.add(id);
+                    }
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------
+           UI RENDERING & UTILS
+           ---------------------------------------------------------------- */
+
+        function renderSidebar(query = "") {
+            const list = document.getElementById('notesList');
+            list.innerHTML = "";
+            const filtered = notesData.filter(n => n.content.toLowerCase().includes(query.toLowerCase()));
+            
+            if(!filtered.length) { list.innerHTML = `<div style="text-align:center; padding:1rem; color:#94a3b8; font-size:0.9rem;">No records found.</div>`; return; }
+
+            filtered.forEach(note => {
+                const d = document.createElement('div');
+                d.className = 'note-card';
+                d.innerHTML = `
+                    <div class="note-meta">
+                        <span>#${note.id.toString().slice(-4)}</span>
+                        <span>${note.timestamp.split(',')[0]}</span>
+                    </div>
+                    <div class="note-preview">${escapeHtml(note.content)}</div>
+                    
+                    <div class="note-actions">
+                        <button class="action-btn action-tooltip" data-tip="Copy" onclick="copyToClipboard(\`${escapeHtml(note.content).replace(/`/g, "\\`")}\`)">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </button>
+                        <button class="action-btn edit action-tooltip" data-tip="Edit" onclick="startEditing(${note.id})">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </button>
+                        <button class="action-btn delete action-tooltip" data-tip="Delete" onclick="deleteNote(${note.id})">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(d);
+            });
+        }
+
+        // --- Import/Export Abbreviations ---
+        function openAbbrModal() { document.getElementById('abbrModal').classList.add('show'); }
+        
+        function exportAbbreviations() {
+            const txt = JSON.stringify(abbreviationList, null, 2);
+            downloadFile(txt, `Abbreviations_${getFormattedDateString()}.json`);
+        }
+        
+        function handleAbbrImport(e) {
+            const f = e.target.files[0]; if(!f) return;
+            const r = new FileReader();
+            r.onload = (evt) => {
+                try {
+                    const data = JSON.parse(evt.target.result);
+                    if(Array.isArray(data)) {
+                        abbreviationList = data;
+                        localStorage.setItem(ABBR_KEY, JSON.stringify(abbreviationList));
+                        showToast(`Imported ${data.length} abbreviations`);
+                        document.getElementById('abbrModal').classList.remove('show');
+                    } else { throw new Error(); }
+                } catch(err) { alert("Invalid JSON file"); }
+                e.target.value = "";
+            };
+            r.readAsText(f);
+        }
+
+        // --- General Utils ---
+        function deleteNote(id) {
+            if(confirm("Delete this record?")) {
+                notesData = notesData.filter(n => n.id !== id);
+                saveNotesToStorage();
+                renderSidebar(document.getElementById('searchInput').value);
+                if(currentEditingId === id) cancelEditMode();
+                updateTotalPatientCount();
+                showToast("Deleted");
+            }
+        }
+        function saveNotesToStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(notesData)); }
+        function loadNotes() { const d = localStorage.getItem(STORAGE_KEY); if(d) try{ notesData = JSON.parse(d); }catch(e){ notesData=[]; } }
+        function saveLogicState() { localStorage.setItem('logic_state', JSON.stringify({ milestones: patientMilestonesReached })); }
+        function loadLogicState() {
+            const d = localStorage.getItem('logic_state');
+            if(d) { try { const p = JSON.parse(d); patientMilestonesReached = p.milestones||[]; } catch(e){} }
+        }
+        function toggleSidebar() {
+            const s = document.getElementById('sidebar'), o = document.getElementById('overlay');
+            s.classList.toggle('active'); o.classList.toggle('active');
+            if(s.classList.contains('active')) { renderSidebar(document.getElementById('searchInput').value); document.getElementById('searchInput').focus(); }
+        }
+        function escapeHtml(str) { return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; }
+        
+        function showToast(msg, isWarning=false) { 
+            const t = document.getElementById('toast'); 
+            t.textContent = msg; 
+            if(isWarning) {
+                t.style.background = 'var(--danger)'; 
+            } else {
+                t.style.background = 'var(--text-heading)';
+            }
+            t.classList.add('show'); 
+            setTimeout(()=> {
+                t.classList.remove('show');
+            }, 3000); 
+        }
+
+        function copyToClipboard(txt) { const ta = document.createElement('textarea'); ta.innerHTML = txt; navigator.clipboard.writeText(ta.value).then(()=>showToast("Copied!")); }
+        function insertAtCursor(textarea, text) {
+            const start = textarea.selectionStart, end = textarea.selectionEnd;
+            textarea.value = textarea.value.substring(0, start) + text + textarea.value.substring(end);
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+        }
+
+        // --- Export Filename Update ---
+        function getFormattedDateString() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day}_${hours}${minutes}${seconds}`;
+        }
+
+        function exportData() {
+            if(!notesData.length) return showToast("No data to export");
+            const txt = notesData.map(n => n.content).join(`\n\n${SEPARATOR}\n\n`);
+            // Format: 60monthrestart_{{date today}}_{{currenttime}}
+            const filename = `60monthrestart_${getFormattedDateString()}.txt`;
+            downloadFile(txt, filename);
+        }
+
+        function handleImport(e) {
+            const f = e.target.files[0]; if(!f) return;
+            const r = new FileReader();
+            r.onload = (evt) => {
+                const b = evt.target.result.split(SEPARATOR).filter(x=>x.trim());
+                b.reverse().forEach(c => notesData.unshift({ id: Date.now()+Math.random(), content: c.trim(), timestamp: new Date().toLocaleString() }));
+                saveNotesToStorage(); showToast(`Imported ${b.length}`); toggleSidebar();
+                updateTotalPatientCount();
+            };
+            r.readAsText(f);
+        }
+        function downloadFile(content, filename) {
+            const blob = new Blob([content], {type: "text/plain"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+        }
+
+        // --- Render Sidebar ID View (Grouped + Copy All) ---
+        function renderPatientIDsModal(onlyDuplicates = false){
+            const patientIDsContent = document.getElementById('patientIDsContent');
+            const patientIDsModal = document.getElementById('patientIDsModal');
+            
+            const agg = { "StLukes": {}, "Aerocare": {}, "OHH": {} };
+            notesData.forEach(n => {
+                const groups = extractPatientIDsGrouped(n.content || '');
+                for(const loc of Object.keys(groups)){
+                    groups[loc].forEach(id => { agg[loc][id] = (agg[loc][id] || 0) + 1; });
+                }
+            });
+
+            patientIDsContent.innerHTML = '';
+            const any = Object.keys(agg).some(g => Object.keys(agg[g]).length > 0);
+            if(!any){
+                patientIDsContent.innerHTML = '<div style="padding:1rem; color:var(--text-muted); text-align:center;">No patient IDs found in any note.</div>';
+                patientIDsModal.classList.add('show');
+                return;
+            }
+
+            for(const loc of Object.keys(agg)){
+                const ids = Object.keys(agg[loc]).sort((a,b)=>Number(a)-Number(b));
+                if(ids.length === 0) continue;
+                
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'pid-group';
+                
+                const heading = document.createElement('div');
+                heading.className = 'pid-group-title';
+                heading.textContent = loc + ` (${ids.length})`;
+                groupDiv.appendChild(heading);
+                
+                const grid = document.createElement('div');
+                grid.className = 'pid-grid';
+
+                ids.forEach(id => {
+                    const count = agg[loc][id];
+                    if(onlyDuplicates && count < 2) return;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'pid-item' + (count > 1 ? ' duplicate' : '');
+                    
+                    const left = document.createElement('span'); left.textContent = id;
+                    const right = document.createElement('span'); 
+                    if(count>1) { right.textContent = `×${count}`; right.style.fontWeight='bold'; }
+
+                    item.appendChild(left); item.appendChild(right);
+                    item.onclick = () => { 
+                        patientIDsModal.classList.remove('show'); renderSidebar(id); 
+                        if(!document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+                    };
+                    grid.appendChild(item);
+                });
+                
+                if(grid.hasChildNodes()) {
+                    groupDiv.appendChild(grid);
+                    patientIDsContent.appendChild(groupDiv);
+                }
+            }
+            patientIDsModal.classList.add('show');
+        }
+
+        function copyAllIDs() {
+            const agg = { "StLukes": [], "Aerocare": [], "OHH": [] };
+            notesData.forEach(n => {
+                const groups = extractPatientIDsGrouped(n.content || '');
+                for(const loc of Object.keys(groups)){
+                    agg[loc].push(...groups[loc]);
+                }
+            });
+
+            let clipboardText = "";
+            const keys = ["StLukes", "Aerocare", "OHH"];
+            
+            keys.forEach(key => {
+                if(agg[key].length > 0) {
+                    clipboardText += `${key}\n`;
+                    // Sort numerically
+                    const sorted = agg[key].sort((a,b) => Number(a)-Number(b));
+                    clipboardText += sorted.join('\n');
+                    clipboardText += `\n\n`;
+                }
+            });
+
+            if(!clipboardText.trim()) return showToast("No IDs to copy");
+            copyToClipboard(clipboardText);
+        }
+    </script>
+</body>
+</html>
+
