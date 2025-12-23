@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>60monthrestart | Professional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Combined Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* --- Main App Global Vars --- */
+            --bg-body: #f1f5f9;
+            --bg-surface: #ffffff;
+            --bg-sidebar: #ffffff;
+            --text-main: #334155;
+            --text-heading: #0f172a;
+            --text-muted: #94a3b8;
+            --brand-dark: #1e293b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            
+            --sidebar-width: 420px;
+            --radius: 8px;
+            --header-height: 64px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            
+            --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            height: 100vh;
+            overflow: hidden; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Components --- */
+        .hidden { display: none !important; }
+        
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 0.6rem 1.1rem; border-radius: var(--radius); font-weight: 500; cursor: pointer;
+            border: 1px solid transparent; transition: all 0.2s ease; font-size: 0.875rem;
+        }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-edit { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+        .btn-edit:hover { background: #fef3c7; }
+        .btn-ghost { background: transparent; color: var(--text-muted); }
+        .btn-ghost:hover { background: var(--bg-body); color: var(--text-heading); }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-main); box-shadow: var(--shadow-sm); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
+
+        /* --- Navbar --- */
+        .navbar {
+            height: var(--header-height); 
+            background: var(--bg-surface); 
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 2rem;
+            position: fixed; top: 0; width: 100%; z-index: 20;
+            box-shadow: var(--shadow-sm);
+        }
+        .brand { font-weight: 700; font-size: 1.25rem; color: var(--brand-dark); display: flex; align-items: center; gap: 10px; }
+        .brand span { background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- Layout --- */
+        .main-container {
+            margin-top: var(--header-height); 
+            height: calc(100vh - var(--header-height)); 
+            display: flex; align-items: flex-start; justify-content: center;
+            padding: 2rem; overflow-y: auto;
+        }
+
+        .editor-card {
+            background: var(--bg-surface); border-radius: 16px; 
+            border: 1px solid var(--border); padding: 3rem; 
+            width: 100%; max-width: 900px;
+            display: flex; flex-direction: column; 
+            position: relative;
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.3s ease;
+            margin-bottom: 3rem; 
+        }
+        .editor-card.editing-mode { border-color: #fcd34d; box-shadow: 0 0 0 4px #fef3c7; }
+
+        .top-status-bar { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border); }
+        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .editor-title { font-size: 1.5rem; font-weight: 700; color: var(--text-heading); }
+        .status-item { display: flex; align-items: center; gap: 8px; background: var(--bg-body); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .status-value { color: var(--primary); font-weight: 700; }
+
+        textarea.main-input {
+            width: 100%; min-height: 600px; border: none; resize: none; outline: none;
+            font-family: var(--font-stack); font-size: 1.05rem; line-height: 1.7; color: var(--text-heading);
+            background: transparent; overflow-y: hidden; padding: 10px; box-sizing: border-box;
+        }
+        textarea.main-input::placeholder { color: #cbd5e1; font-weight: 300; }
+
+        /* --- Sidebar --- */
+        .overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(2px); z-index: 40; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .overlay.active { opacity: 1; visibility: visible; }
+        .sidebar {
+            position: fixed; top: 0; bottom: 0; left: 0; width: var(--sidebar-width);
+            background: var(--bg-sidebar); z-index: 50; transform: translateX(-100%);
+            transition: 0.3s cubic-bezier(0.2, 0, 0, 1); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; box-shadow: 20px 0 40px -10px rgba(0,0,0,0.05);
+        }
+        .sidebar.active { transform: translateX(0); }
+        .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-surface); display: flex; flex-direction: column; gap: 1rem; }
+        .sidebar-title { font-weight: 700; font-size: 1.1rem; color: var(--text-heading); }
+        .search-input { width: 100%; padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); }
+        .search-input:focus { background: white; border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px var(--primary-light); }
+        .notes-list { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 16px; background: #f8fafc; }
+        
+        .note-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; transition: all 0.2s ease; cursor: pointer; position: relative; box-shadow: var(--shadow-sm); }
+        .note-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #cbd5e1; }
+        .note-meta { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
+        .note-preview { font-size: 0.9rem; color: var(--text-main); max-height: 80px; overflow: hidden; margin-bottom: 1rem; white-space: pre-wrap; line-height: 1.5; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
+        .note-actions { display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
+        .action-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; background: white; color: var(--text-muted); }
+        .action-btn:hover { border-color: var(--border); color: var(--primary); background: var(--primary-light); }
+        .action-btn.delete:hover { border-color: #fecaca; color: var(--danger); background: var(--danger-bg); }
+
+        /* --- Modals --- */
+        .modal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none; }
+        .modal.show { opacity: 1; visibility: visible; pointer-events: auto; }
+        .modal-bg { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); }
+        .modal-content { position: relative; background: white; width: 90%; max-width: 700px; padding: 0; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); transform: translateY(15px); transition: 0.3s; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; }
+        .modal.show .modal-content { transform: translateY(0); }
+        .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: #f8fafc; }
+        .modal-body { padding: 2rem; overflow-y: auto; }
+
+        /* PID Grid */
+        .pid-group { margin-bottom: 2rem; }
+        .pid-group-title { font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: 700; margin-bottom: 12px; border-bottom: 2px solid var(--primary-light); padding-bottom: 6px; }
+        .pid-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        .pid-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; font-size: 0.9rem; cursor: pointer; border-radius: 6px; background: #f8fafc; border: 1px solid var(--border); color: var(--text-main); font-weight: 500; }
+        .pid-item:hover { background: white; border-color: var(--primary); color: var(--primary); box-shadow: var(--shadow-sm); }
+        .pid-item.duplicate { color: var(--danger); background: var(--danger-bg); border-color: #fca5a5; }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); background: var(--text-heading); color: white; padding: 12px 28px; border-radius: 50px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); transition: 0.4s; z-index: 200; font-weight: 500; font-size: 0.95rem; }
+        .toast.show { transform: translate(-50%, 0); }
+        .toast.warning { background: var(--danger); }
+        
+        input[type="file"] { display: none; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; border: 2px solid transparent; background-clip: content-box; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- Scoped Styles for Calculator --- */
+        .calc-wrapper { font-family: 'Plus Jakarta Sans', sans-serif; color: #475569; }
+        .calc-wrapper .config-card { background: #ffffff; padding: 24px; border-radius: 16px; border: 1px solid #e2e8f0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .calc-wrapper .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .calc-wrapper label { font-size: 0.875rem; font-weight: 600; color: #1e293b; }
+        .calc-wrapper input { font-family: inherit; padding: 12px 16px; font-size: 1rem; border: 1.5px solid #e2e8f0; border-radius: 10px; outline: none; background-color: #ffffff; transition: all 0.2s; color: #1e293b; width: 100%; display: block; }
+        .calc-wrapper input:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+        .calc-wrapper .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .calc-wrapper .display-card { background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05); display: flex; flex-direction: column; align-items: center; position: relative; transition: all 0.2s; cursor: pointer; user-select: none; }
+        .calc-wrapper .display-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); border-color: #3b82f6; }
+        .calc-wrapper .card-meta { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #3b82f6; margin-bottom: 12px; background: rgba(59, 130, 246, 0.1); padding: 4px 10px; border-radius: 6px; pointer-events: none; }
+        .calc-wrapper .date-val { font-size: 2rem; font-weight: 800; color: #1e293b; letter-spacing: -0.02em; margin-bottom: 4px; pointer-events: none; }
+        .calc-wrapper .day-val { font-size: 1rem; font-weight: 600; color: #94a3b8; margin-bottom: 12px; pointer-events: none; }
+        .calc-wrapper .copy-hint { font-size: 0.75rem; font-weight: 600; color: #94a3b8; display: flex; align-items: center; gap: 6px; opacity: 0.6; transition: 0.2s; }
+        .calc-wrapper .display-card:hover .copy-hint { opacity: 1; color: #3b82f6; }
+
+        /* --- Scoped Styles for MyApps (Neon Theme) --- */
+        .myapps-wrapper {
+            font-family: 'Open Sans', sans-serif;
+            color: #e0e6f0;
+            background-color: #0a0f18; /* Dark background for modal body */
+            min-height: 400px;
+            padding: 30px;
+        }
+
+        .myapps-wrapper .search-container {
+            margin-bottom: 30px; width: 100%; position: relative;
+        }
+        
+        .myapps-wrapper .search-container input[type="text"] {
+            padding: 15px 50px;
+            width: 100%;
+            border: 1px solid rgba(100, 120, 150, 0.3);
+            border-radius: 30px;
+            font-size: 1rem;
+            background-color: rgba(10, 15, 24, 0.7);
+            color: #e0e6f0;
+            outline: none;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .myapps-wrapper .search-container input[type="text"]:focus {
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.5), 0 0 5px #00f2ff;
+            border-color: #00f2ff;
+        }
+        
+        .myapps-wrapper .search-icon-svg {
+            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+            width: 20px; height: 20px; stroke: #9fadcf; pointer-events: none;
+        }
+        
+        .myapps-wrapper .clear-search-btn {
+            position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #9fadcf; font-size: 1.5rem;
+            cursor: pointer; display: none;
+        }
+
+        .myapps-wrapper .links-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 25px;
+            perspective: 2000px;
+        }
+
+        .myapps-wrapper .link-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 15px;
+            background-color: rgba(28, 35, 55, 0.7);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+            transition: transform 0.15s linear, box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.4s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .myapps-wrapper .link-item:hover {
+            border-color: #00f2ff;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+            z-index: 10;
+        }
+
+        .myapps-wrapper .link-item a {
+            display: flex; flex-direction: column; align-items: center; color: inherit; text-decoration: none;
+        }
+
+        .myapps-wrapper .img-container {
+            width: 70px; height: 70px;
+            border-radius: 8px;
+            overflow: hidden; margin-bottom: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+            transition: transform 0.4s;
+        }
+        
+        .myapps-wrapper .link-item:hover .img-container { transform: scale(1.05); }
+        
+        /* Fallback Avatar Styling */
+        .myapps-wrapper .app-avatar {
+            width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1.2rem; color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .myapps-wrapper .link-item p {
+            font-size: 0.9rem; color: #9fadcf; font-weight: 500; word-break: break-word; line-height: 1.3;
+            font-family: 'Poppins', sans-serif;
+        }
+        .myapps-wrapper .link-item:hover p { color: #00f2ff; }
+
+        /* --- Document Retrieval System (Docs) --- */
+        .docs-wrapper {
+            background-color: #111827; /* Dark Gray */
+            color: #ffffff;
+            min-height: 400px;
+            padding: 30px;
+        }
+        .docs-search-bar {
+            position: relative; margin-bottom: 2rem;
+        }
+        .docs-search-bar input {
+            width: 100%; background: #1f2937; border: 1px solid #374151;
+            padding: 14px 14px 14px 45px; border-radius: 8px; color: white;
+            font-size: 1rem;
+        }
+        .docs-search-bar input:focus { outline:none; border-color: #3b82f6; ring: 2px solid #3b82f6; }
+        .docs-search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #9ca3af; }
+
+        .docs-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 1.5rem;
+        }
+        .doc-btn {
+            aspect-ratio: 1/1;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 12px; border: none; cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s;
+            padding: 1rem;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+        .doc-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .doc-btn svg { width: 48px; height: 48px; margin-bottom: 12px; fill: currentColor; }
+        .doc-btn span { font-weight: 600; font-size: 0.95rem; text-align: center; line-height: 1.2; }
+
+        /* Doc Button Colors (mapped from Tailwind) */
+        .doc-btn.sky { background-color: #0ea5e9; }
+        .doc-btn.lime { background-color: #84cc16; }
+        .doc-btn.orange { background-color: #f97316; }
+        .doc-btn.pink { background-color: #ec4899; }
+        .doc-btn.violet { background-color: #7c3aed; }
+        .doc-btn.yellow { background-color: #facc15; color: #4b5563; } /* dark text for yellow */
+        .doc-btn.blue { background-color: #1e40af; }
+        .doc-btn.red { background-color: #dc2626; }
+        .doc-btn.indigo { background-color: #6366f1; }
+        .doc-btn.green { background-color: #16a34a; }
+        .doc-btn.teal { background-color: #14b8a6; }
+        .doc-btn.black { background-color: #000000; }
+
+        /* PDF Viewer Specific */
+        .pdf-modal-body { height: 85vh; padding: 0; background: #374151; display:flex; flex-direction:column; }
+        .pdf-frame { width: 100%; flex: 1; border: none; background: white; }
+
+        /* --- Parachute Dashboard (Scoped Slate Theme) --- */
+        .parachute-wrapper {
+            background-color: #f8fafc; /* Slate 50 */
+            color: #1e293b; /* Slate 800 */
+            min-height: 500px;
+            display: flex; flex-direction: column;
+            padding: 24px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .para-controls {
+            display: flex; gap: 12px; margin-bottom: 24px;
+            background: white; padding: 16px; border-radius: 12px;
+            border: 1px solid #e2e8f0; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+        }
+
+        .para-search-group {
+            position: relative; flex: 1;
+        }
+
+        .para-search-input {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .para-search-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        .para-icon {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; width: 18px; height: 18px;
+        }
+
+        .para-table-container {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        .para-table-scroll {
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        table.para-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        table.para-table thead {
+            background-color: #1e293b; /* Slate 800 */
+            color: #f8fafc;
+            position: sticky; top: 0; z-index: 10;
+        }
+
+        table.para-table th {
+            padding: 14px 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        table.para-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.15s;
+        }
+        table.para-table tbody tr:hover { background-color: #eff6ff; } /* Light Blue Hover */
+
+        table.para-table td {
+            padding: 14px 20px;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+        
+        table.para-table td.highlight-cell { font-weight: 600; color: #0f172a; }
+
+        .para-highlight {
+            background-color: #dbeafe; color: #1e40af;
+            padding: 2px 4px; border-radius: 4px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-row { animation: fadeInUp 0.3s ease-out forwards; opacity: 0; }
+
+        .para-empty { padding: 40px; text-align: center; color: #94a3b8; font-style: italic; }
+
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="sidebar-title">History</span>
+                <button class="btn-ghost" onclick="toggleSidebar()" style="padding: 6px; border-radius: 50%;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search records...">
+        </div>
+        <div class="notes-list" id="notesList"></div>
+    </aside>
+
+    <nav class="navbar">
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+            <button class="btn-ghost" onclick="toggleSidebar()" title="View History (Press 'S')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+            </button>
+            <div class="brand"><span>60monthrestart</span></div>
+        </div>
+        <div style="display:flex; gap:0.8rem;">
+            <!-- Parachute Button (New) -->
+            <button class="btn btn-outline" onclick="openParachute()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-7.75 4.34"></path><path d="M19.75 6.34A10 10 0 0 0 12 2"></path><path d="M22 12c0 5.5-4.5 10-10 10S2 17.5 2 12"></path><path d="M4.25 6.34C2.85 7.89 2 9.87 2 12"></path><path d="M22 12c0-2.13-.85-4.11-2.25-5.66"></path><path d="M12 2v20"></path><path d="M2 12h20"></path></svg>
+                Parachute
+            </button>
+            <!-- Docs Button -->
+            <button class="btn btn-outline" onclick="openDocSystem()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Docs
+            </button>
+            <!-- MyApps Button -->
+            <button class="btn btn-outline" onclick="openMyApps()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                MyApps
+            </button>
+            <!-- Calculator Button -->
+            <button class="btn btn-outline" onclick="document.getElementById('calcModal').classList.add('show')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" transform="rotate(180 12 12)"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="14"></line><line x1="12" y1="14" x2="12" y2="14"></line><line x1="8" y1="14" x2="8" y2="14"></line><line x1="16" y1="18" x2="16" y2="18"></line><line x1="12" y1="18" x2="12" y2="18"></line><line x1="8" y1="18" x2="8" y2="18"></line></svg>
+                Calculator
+            </button>
+            <button class="btn btn-outline" onclick="openAbbrModal()">Abbreviations</button>
+            <button class="btn btn-outline" onclick="renderPatientIDsModal(false)">View IDs</button>
+            <button class="btn btn-outline" onclick="exportData()">Export</button>
+            <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">Import</button>
+            <input type="file" id="fileInput" accept=".txt" class="hidden">
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="editor-card" id="editorCard">
+            <!-- Active IDs Moved to Top -->
+            <div class="top-status-bar">
+                <div class="status-item">
+                    <span style="color:var(--text-muted)">Active IDs:</span>
+                    <span id="activeCountEl" class="status-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span style="color:var(--text-muted)">Total Saved IDs:</span>
+                    <span id="totalSavedCountEl" class="status-value">0</span>
+                </div>
+            </div>
+
+            <div class="editor-header">
+                <div>
+                    <span id="modeTitle" class="editor-title">New Entry</span>
+                    <button id="cancelEditBtn" class="btn btn-ghost hidden" onclick="cancelEditMode()" style="font-size:0.75rem; color:var(--danger); margin-left: 10px;">Cancel Edit</button>
+                </div>
+                <button id="saveBtn" class="btn btn-primary" onclick="handleSaveAction()" title="Ctrl + S">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Save Note
+                </button>
+            </div>
+            
+            <textarea id="notepad" class="main-input" placeholder="Type or Paste Patient Info here...&#10;Shortcuts expand with Space.&#10;Press 'Ctrl+S' to save."></textarea>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    
+    <!-- Parachute Dashboard Modal (New) -->
+    <div id="parachuteModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('parachuteModal').classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 1000px; height: 85vh;">
+            <div class="modal-header" style="background: #1e293b; border-bottom: 1px solid #334155; color: white;">
+                <h3>Parachute Dashboard</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('parachuteModal').classList.remove('show')" style="color: #cbd5e1;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body parachute-wrapper">
+                <div class="para-controls">
+                    <div class="para-search-group">
+                        <svg class="para-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <input type="text" id="paraSearchInput" class="para-search-input" placeholder="Type to search locations, states, or databases instantly...">
+                    </div>
+                    <button class="btn btn-outline" id="paraClearBtn">Clear</button>
+                </div>
+                
+                <div class="para-table-container">
+                    <div class="para-table-scroll">
+                        <table class="para-table" id="paraTable">
+                            <thead>
+                                <tr>
+                                    <th>State / Title</th>
+                                    <th>Parachute Dashboard</th>
+                                    <th>Region</th>
+                                    <th>Brightree Database</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paraTableBody">
+                                <!-- Rows injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Retrieval Modal -->
+    <div id="docsModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('docsModal').classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 900px; background: #111827; border: 1px solid #1e293b;">
+            <div class="modal-header" style="background: rgba(31, 41, 55, 0.9); border-bottom: 1px solid #374151; color: white;">
+                <h3>Document Retrieval System</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('docsModal').classList.remove('show')" style="color: #9ca3af;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body docs-wrapper">
+                <div class="docs-search-bar">
+                    <svg class="docs-search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    <input type="text" id="docSearchInput" placeholder="Search by name (e.g., CPAP, TSS)...">
+                </div>
+                <div class="docs-grid" id="docsGrid">
+                    <!-- 6MWT -->
+                    <button class="doc-btn sky" data-pdf="assets/6MWT.pdf" data-title="6MWT Document">
+                        <svg viewBox="0 0 24 24"><path d="M13.5 4.06c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5c0 .66-.26 1.28-.71 1.74l-4.79 4.79-1.42-1.42 4.5-4.5c-.2-.11-.43-.17-.68-.17-1.1 0-2 .9-2 2v.06l-1.32 1.32L12 10.5V5.41l1.5-1.35zM4.94 17.56l2.12 2.12 6.36-6.36-2.12-2.12-6.36 6.36zm-3.53 2.12l2.12-2.12L4.95 19l-2.12 2.12c-.78.78-2.05.78-2.83 0s-.78-2.05 0-2.83zM12.05 15l-1.41 1.41L12 17.83l4.24-4.24-2.12-2.12-3.07 3.07z"/></svg>
+                        <span>6MWT</span>
+                    </button>
+                    <!-- TSS -->
+                    <button class="doc-btn lime" data-pdf="assets/TSS.pdf" data-title="TSS Document">
+                        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 16H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v4zm-5-6h-2v2h2V5z"/></svg>
+                        <span>TSS</span>
+                    </button>
+                    <!-- ONO -->
+                    <button class="doc-btn orange" data-pdf="assets/ONO.pdf" data-title="ONO Document">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                        <span>ONO</span>
+                    </button>
+                    <!-- ABG -->
+                    <button class="doc-btn pink" data-pdf="assets/ABG.pdf" data-title="ABG Document">
+                        <svg viewBox="0 0 24 24"><path d="M12 2c-5.33 4.55-8 8.48-8 11.42 0 3.31 2.69 6 6 6 2.24 0 4.25-1.23 5.34-3.07C16.33 19.43 18 19 18 19c1.66 0 3-1.34 3-3 0-2.31-2.9-5.59-8-12z"/></svg>
+                        <span>ABG</span>
+                    </button>
+                    <!-- POC -->
+                    <button class="doc-btn violet" data-pdf="assets/POC Rx.pdf" data-title="POC Prescription">
+                        <svg viewBox="0 0 24 24"><path d="M15 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7l-5-5zm-1 11h-2v2h-2v-2H8v-2h2V9h2v2h2v2zm1-8V4l4 4h-4z"/></svg>
+                        <span>POC Rx</span>
+                    </button>
+                    <!-- Addendum -->
+                    <button class="doc-btn yellow" data-pdf="assets/Addendum.pdf" data-title="Addendum">
+                        <svg viewBox="0 0 24 24"><path d="M15 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7l-5-5zm-1 11h-2v2h-2v-2H8v-2h2V9h2v2h2v2zm1-8V4l4 4h-4z"/></svg>
+                        <span>Addendum</span>
+                    </button>
+                    <!-- Clinical Notes -->
+                    <button class="doc-btn blue" data-pdf="assets/Clinical notes.pdf" data-title="Clinical Notes">
+                        <svg viewBox="0 0 24 24"><path d="M15 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7l-5-5zm-1 11h-2v2h-2v-2H8v-2h2V9h2v2h2v2zm1-8V4l4 4h-4z"/></svg>
+                        <span>Clinical Notes</span>
+                    </button>
+                    <!-- 60 Month -->
+                    <button class="doc-btn red" data-pdf="assets/60monthletter.pdf" data-title="60 Month Contract">
+                        <svg viewBox="0 0 24 24"><path d="M22.7 14.3l-2.5-2.5c-.4-.4-1-.4-1.4 0l-1.1 1.1-6.1-6.1 1.1-1.1c.4-.4.4-1 0-1.4l-2.5-2.5c-.4-.4-1-.4-1.4 0L7 3.1c-.4.4-.4 1 0 1.4l1.1 1.1-8.5 8.5L3 21.4c.4.4 1 .4 1.4 0l2.5-2.5c.4-.4.4-1 0-1.4l-1.1-1.1 6.1-6.1 1.1 1.1c.4.4 1 .4 1.4 0l2.5-2.5 1.1 1.1 4.3 4.3-1.1 1.1c-.4.4-.4 1 0 1.4l2.5 2.5c.4.4 1 .4 1.4 0l1.9-1.9c.3-.5.3-1.1 0-1.5zm-10.8-2.2L3.4 19.6 2 18.2l8.5-8.5 1.4 1.4z"/></svg>
+                        <span>60 Month Contract</span>
+                    </button>
+                    <!-- Discontinue -->
+                    <button class="doc-btn indigo" data-pdf="assets/Discontinue Script.pdf" data-title="Discontinue Script">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm-2.06 9.94L10.5 13.38l-1.44-1.44L8.02 13l1.44 1.44-1.44 1.44 1.04 1.04 1.44-1.44 1.44 1.44 1.04-1.04-1.44-1.44 1.44-1.44-1.04-1.02zM13 9V3.5L18.5 9H13z"/></svg>
+                        <span>Discontinue Script</span>
+                    </button>
+                    <!-- CPAP -->
+                    <button class="doc-btn green" data-pdf="assets/CPAP.pdf" data-title="CPAP Requal">
+                        <svg viewBox="0 0 24 24"><path d="M10 3.34c-1.2.48-2.28 1.34-3.13 2.51l-1.49-1.49C6.63 2.91 8.24 2 10 2v1.34zM21.61 6.27l-1.49 1.49C19.28 6.57 18.2 5.71 17 5.23V4h-2v1.51C13.29 5.8 12 7.01 12 8.5c0 .93.41 1.76 1.08 2.34L10 14H8v-2H5c-1.66 0-3 1.34-3 3v5h5v-3.05c0-.45.09-.88.25-1.29l2.59-6.47c1.1-2.73 3.96-4.49 6.97-4.13.75.09 1.47.33 2.13.7L22 4.39l-.39 1.88zM9 18H4v-1c0-.55.45-1 1-1h3v2z"/></svg>
+                        <span>CPAP Requal</span>
+                    </button>
+                    <!-- Oxygen -->
+                    <button class="doc-btn teal" data-pdf="assets/Oxygen Requalification.pdf" data-title="Oxygen Requal">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 3.16 1.47 5.96 3.77 7.79l.99-.99C5.1 17.51 4 14.93 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 2.93-1.58 5.48-3.99 6.89l.98.98C20.53 17.96 22 15.16 22 12c0-5.52-4.48-10-10-10zm0 13c-1.1 0-2-.9-2-2h4c0 1.1-.9 2-2 2zm4.42-3.89c-.31-.9-1.07-1.56-2-1.82V9.5c0-.28-.22-.5-.5-.5s-.5.22-.5.5v.79c-.93.26-1.69.92-2 1.82-.13.37.1.79.5.79h3c.4 0 .63-.42.42-.79z"/></svg>
+                        <span>Oxygen Requal</span>
+                    </button>
+                     <!-- Dummy -->
+                     <button class="doc-btn black" data-pdf="assets/dummy.pdf" data-title="Dummy Doc">
+                        <svg viewBox="0 0 24 24"><path d="M15 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7l-5-5zm-1 11h-2v2h-2v-2H8v-2h2V9h2v2h2v2zm1-8V4l4 4h-4z"/></svg>
+                        <span>Dummy</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal (Stacked on top) -->
+    <div id="pdfViewerModal" class="modal" style="z-index: 105;">
+        <div class="modal-bg" onclick="document.getElementById('pdfViewerModal').classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 900px; height: 90vh;">
+            <div class="modal-header" style="background: #1f2937; border-bottom: 1px solid #374151; color: white;">
+                <h3 id="pdfViewerTitle">Document</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('pdfViewerModal').classList.remove('show')" style="color: #9ca3af;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body pdf-modal-body">
+                <iframe id="pdfFrame" class="pdf-frame" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- MyApps Modal (New) -->
+    <div id="myAppsModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('myAppsModal').classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 900px; background: #0a0f18; border: 1px solid #1e293b;">
+            <div class="modal-header" style="background: rgba(20, 25, 40, 0.9); border-bottom: 1px solid rgba(0, 242, 255, 0.2); color: #e0e6f0;">
+                <h3 style="color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.5); letter-spacing: 1px;">MyApps Portal</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('myAppsModal').classList.remove('show')" style="color: #9fadcf;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body myapps-wrapper">
+                <div class="search-container">
+                    <svg class="search-icon-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="appSearchInput" placeholder="Search applications...">
+                    <button class="clear-search-btn" id="appClearSearchBtn" title="Clear search">&times;</button>
+                </div>
+                <div class="links-container" id="appLinksContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculator Modal -->
+    <div id="calcModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('calcModal').classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Date Calculator</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('calcModal').classList.remove('show')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body calc-wrapper">
+                <section class="config-card">
+                    <div class="input-group">
+                      <label for="calcRefDate">Reference Date</label>
+                      <input type="date" id="calcRefDate" />
+                    </div>
+                    <div class="input-group">
+                      <label for="calcDaysInput">Days Offset</label>
+                      <input type="number" id="calcDaysInput" value="90" min="1" placeholder="90" />
+                    </div>
+                </section>
+                <section class="output-grid">
+                    <article class="display-card" onclick="copyCalcValue('calc-before-date')">
+                      <div class="card-meta" id="calc-label-before">90 Days Prior</div>
+                      <div id="calc-before-date" class="date-val">--/--/----</div>
+                      <div id="calc-before-day" class="day-val">--</div>
+                      <div class="copy-hint">Click to Copy</div>
+                    </article>
+                    <article class="display-card" onclick="copyCalcValue('calc-after-date')">
+                      <div class="card-meta" id="calc-label-after">90 Days After</div>
+                      <div id="calc-after-date" class="date-val">--/--/----</div>
+                      <div id="calc-after-day" class="day-val">--</div>
+                      <div class="copy-hint">Click to Copy</div>
+                    </article>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div id="greetingModal" class="modal">
+        <div class="modal-bg" onclick="this.parentElement.classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 500px; text-align:center;">
+            <div style="padding: 2.5rem;">
+                <div style="width: 60px; height: 60px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                </div>
+                <h2 id="greetingTitleEl" style="color:var(--text-heading); font-weight:700; margin: 0 0 1rem 0;">Milestone Reached!</h2>
+                <p id="greetingMessageEl" style="font-size:1.05rem; line-height:1.6; color:var(--text-main); margin-bottom: 2rem;"></p>
+                <button class="btn btn-primary" style="width: 100%;" onclick="document.getElementById('greetingModal').classList.remove('show')">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="patientIDsModal" class="modal">
+        <div class="modal-bg" onclick="this.parentElement.classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Patient IDs Summary</h3>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="copyAllIDs()">Copy All</button>
+                    <button class="btn btn-ghost" onclick="document.getElementById('patientIDsModal').classList.remove('show')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                </div>
+            </div>
+            <div class="modal-body"><div id="patientIDsContent"></div></div>
+        </div>
+    </div>
+
+    <div id="abbrModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('abbrModal').classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Abbreviation Manager</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('abbrModal').classList.remove('show')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:0.9rem; color:var(--text-main); margin-bottom:1.5rem; line-height: 1.5;">Type shortcut + <strong>Space</strong> to expand.</p>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; padding: 2rem; background:var(--bg-body); border-radius:12px; border: 1px dashed var(--border);">
+                    <button class="btn btn-primary" onclick="exportAbbreviations()">Export JSON</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('abbrInput').click()">Import JSON</button>
+                    <input type="file" id="abbrInput" accept=".json" class="hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Action Saved</div>
+
+    <script>
+        const DEFAULT_ABBRS = [
+            {"abbr": "vm","expansion": "Voicemail"},
+            {"abbr": "gtg","expansion": "got to go"},
+            {"abbr": "brb","expansion": "be right back"},
+            {"abbr": "rek","expansion": "REKEYED SO#CODE: Rekey to show the rental equipment the patient has.\n\nPT NAME: CODE\nPT ID: CODE\nSALES ORDER: CODE\nBT DATABASE:"},
+            {"abbr": "rul.met","expansion": "RUL MET E1390 DATE PLEASE VOID ANY UNPAID CLAIMS  \nRUL MET E1392 DATE PLEASE VOID ANY UNPAID CLAIMS  \nRUL MET E0431 DATE PLEASE VOID ANY UNPAID CLAIMS  \nRUL MET K0738 DATE PLEASE VOID ANY UNPAID CLAIMS \n--------------------------------------------- \n5-YR RUL is not due until the DATE. Please do not schedule it until then. / 60Month Restart  \nPlease have patient sign 60-month letter when completing exchange/restart located in OTL.  \nCSR, Scheduling  raymond.tariao@adapthealth.com \n--------------------------------------------- \nBL-E1390-5LPM \nBL-E1390-10LPM \nBL-E1392 \nOXY PORTABILITY \nBL-E0443 \nBL-K0738"},
+            {"abbr": "AC","expansion": "Aerocare"},
+            {"abbr": "stl","expansion": "StLukes"},
+            {"abbr": "intro.","expansion": "Hello,\n\nI hope this email finds you well. I am writing to request confirmation on whether the address provided for our patient falls within your service area. \n\n[STATE YOUR REASON HERE]\n\nPatient Information:  \n• CODE  \n• SO#CODE  \n• PU ticket#CODE  \n\nIf further details are required, please let us know at your earliest convenience. Your prompt attention to this matter is appreciated.\n\nThank you,"}
+        ];
+
+        const SEPARATOR = "____________________________________________________________________";
+        const STORAGE_KEY = "60month_db";
+        const ABBR_KEY = "60month_abbr";
+        const HEADER_PREF_KEY = "60month_header_pref";
+        
+        let notesData = [];
+        let currentEditingId = null;
+        let abbreviationList = [];
+        let milestoneTitles = ["Great Job!", "On Fire!", "Unstoppable!", "Legendary!", "Machine Mode!"];
+        let milestoneGreetingIndex = 0;
+        let currentUserName = "User";
+        let patientMilestonesReached = []; 
+        let knownDuplicateIDsForAlert = new Set();
+
+        /* --- Parachute Data --- */
+        const parachuteData = [
+            { title: "Alabama", dashboard: "AdaptHealth/Aerocare South (AL, LA, MS)", region: "South", database: "Aerocare" }, { title: "Arkansas", dashboard: "Aerocare (AR)", region: "AR", database: "Aerocare" }, { title: "Arkansas (on the MO Border)", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" }, { title: "Arizona", dashboard: "AdaptHealth West", region: "West", database: "St Lukes/Adapt" }, { title: "California", dashboard: "AdaptHealth West", region: "West", database: "St Lukes/Adapt" }, { title: "Colorado", dashboard: "Aerocare and AdaptHealth - CO, OK and WY", region: "Mountain", database: "Aerocare" }, { title: "Connecticut", dashboard: "AdaptHealth New England CT", region: "East", database: "OHH" }, { title: "District of Columbia", dashboard: "AdaptHealth/Aerocare - MidAtlantic", region: "MidAtlantic", database: "St Lukes/Adapt" }, { title: "Delaware", dashboard: "AdaptHealth/Aerocare - MidAtlantic", region: "MidAtlantic", database: "St Lukes/Adapt" }, { title: "Florida", dashboard: "Aerocare (FL)", region: "FL", database: "Aerocare" }, { title: "Georgia", dashboard: "AdaptHealth/Aerocare Georgia", region: "GA", database: "Aerocare" }, { title: "Iowa", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" }, { title: "Idaho", dashboard: "AdaptHealth Pacific NorthWest", region: "Pacific NorthWest", database: "St Lukes/Adapt" }, { title: "Illinois (Chicago)", dashboard: "Total Home Health", region: "IL", database: "" }, { title: "Illinois (Chicago)", dashboard: "Home Medical Express", region: "IL", database: "St Lukes/Adapt" }, { title: "Indiana (Northern)", dashboard: "Airway Oxygen", region: "Michigan/Northern Indiana", database: "Aerocare" }, { title: "Indiana (Southern)", dashboard: "AdaptHealth/AeroCare KY & Southern IN", region: "Kentucky/Southern Indiana", database: "St Lukes/Adapt" }, { title: "Kansas", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" }, { title: "Kentucky", dashboard: 
+"AdaptHealth/AeroCare KY & Southern IN", region: "Kentucky/Southern Indiana", database: "St Lukes/Adapt" }, { title: "Kentucky", dashboard: "AdaptHealth - East", region: "Wecare", database: "Aerocare" }, { title: "Louisiana", dashboard: "AdaptHealth/Aerocare South (AL, LA, MS)", region: "South", database: "Aerocare" }, { title: "Massachusetts", dashboard: "AdaptHealth New England MA", region: "New England", database: "OHH" }, { title: "Maryland", dashboard: "AdaptHealth/Aerocare - MidAtlantic", region: "MidAtlantic", database: "St Lukes/Adapt" }, { title: "Maine", dashboard: "AdaptHealth New England MA", region: "New England", database: "OHH" }, { title: "Michigan", dashboard: "Airway Oxygen", region: "Michigan/Northern Indiana", database: "Aerocare" }, { title: "Minnesota", dashboard: "AdaptHealth Minnesota", region: "MN", database: "St Lukes/Adapt" }, { title: "Missouri", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" }, { title: "Mississippi", dashboard: "AdaptHealth/Aerocare South (AL, LA, MS)", region: "South", database: "Aerocare" }, { title: "Montana", dashboard: "Aerocare and AdaptHealth - CO, OK and WY", region: "Mountain", database: "Aerocare" }, { title: "North Carolina", dashboard: "AdaptHealth Southeast", region: "NC", database: "St Lukes/Adapt" }, { title: "North Carolina (Western)", dashboard: "AdaptHealth/Aerocare Western NC", region: "Western NC/Eastern TN", database: "Aerocare" }, { title: "North Dakota", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" }, { title: "Nebraska", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" }, { title: "New Hampshire", dashboard: "AdaptHealth New England Keene Medical", region: "New England", database: "OHH" }, { title: "New Jersey", dashboard: "Ocean Home Health", region: "NJ", database: "OHH" }, { title: "New Mexico", dashboard: "AdaptHealth West", region: "NM", database: "St Lukes/Adapt" }, { title: "Nevada", dashboard: "AdaptHealth West", regi
+on: "West", database: "St Lukes/Adapt" }, { title: "New York (Metro)", dashboard: "Landauer Medstar", region: "East", database: "OHH" }, { title: "New York (Metro PAP)", dashboard: "Landauer Medstar PAP", region: "East", database: "OHH" }, { title: "New York (North of Kingston)", dashboard: "AdaptHealth Upstate NY & Respiratory Services of Western NY", region: "East", database: "OHH" }, { title: "Ohio", dashboard: "AdaptHealth - East", region: "OH", database: "Aerocare" }, { title: "Oklahoma", dashboard: "Aerocare and AdaptHealth - CO, OK and WY", region: "Mountain", database: "Aerocare" }, { title: "Oregon", dashboard: "AdaptHealth Pacific NorthWest", region: "Pacific NorthWest", database: "St Lukes/Adapt" }, { title: "Pennsylvania", dashboard: "AdaptHealth/Aerocare - MidAtlantic", region: "MidAtlantic", database: "St Lukes/Adapt" }, { title: "Rhode Island", dashboard: "AdaptHealth New England RI", region: "New England", database: "OHH" }, { title: "South Carolina", dashboard: "AdaptHealth/Aerocare SC", region: "South Carolina", database: "Aerocare" }, { title: "South Dakota", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" }, { title: "Tennessee", dashboard: "AdaptHealth/AeroCare TN", region: "Tennessee", database: "Aerocare" }, { title: "Texas", dashboard: "AdaptHealth Texas", region: "Tx", database: "St Lukes/Adapt" }, { title: "Utah", dashboard: "Medway", region: "Medway", database: "St Lukes/Adapt" }, { title: "Virginia", dashboard: "AdaptHealth/Aerocare - MidAtlantic", region: "Virginias", database: "St Lukes/Adapt" }, { title: "Vermont", dashboard: "AdaptHealth New England Keene Medical", region: "New England", database: "OHH" }, { title: "Washington", dashboard: "AdaptHealth Pacific NorthWest", region: "Pacific NorthWest", database: "St Lukes/Adapt" }, { title: "Wisconsin", dashboard: "Aerocare (WI)", region: "WI", database: "Aerocare" }, { title: "West Virginia", dashboard: "AdaptHealth/Aerocare - MidAtlantic", region: "Virginias", d
+atabase: "St Lukes/Adapt" }, { title: "Wyoming", dashboard: "Aerocare and AdaptHealth - CO, OK and WY", region: "Mountain", database: "Aerocare" }, { title: "Diabetes", dashboard: "AdaptHealth Patient Care Solutions", region: "Diabetes", database: "Diabetes" }, { title: "Diabetes", dashboard: "", region: "Diabetes", database: "Diabetes" }, { title: "Michigan", dashboard: "Access Medical", region: "Michigan.Northern Indiana", database: "Aerocare" }
+        ];
+
+        /* --- MyApps Data (With Abbreviations for Icons) --- */
+        const myAppsData = [
+            { title: "Myapps", url: "https://myapps.microsoft.com/", initials: "MA", color: "#00a8e8" },
+            { title: "Patient search", url: "https://osapps.adapthealth.com/patientsearch/", initials: "PS", color: "#00cc88" },
+            { title: "MyCGS", url: "https://mycgsportal.com/MyCGS/SameSimilar/SameSimilarSummary", initials: "CGS", color: "#3366cc" },
+            { title: "Aerocare", url: "https://launcher.myapps.microsoft.com/api/signin/4792ba22-7ac0-4c64-bdd0-c21aca6ae69c", initials: "AC", color: "#e81e63" },
+            { title: "StLukes", url: "https://launcher.myapps.microsoft.com/api/signin/03d84850-9e34-425c-8a43-36895a622edb", initials: "STL", color: "#ff9800" },
+            { title: "OHH", url: "https://launcher.myapps.microsoft.com/api/signin/7cc7482b-41c0-41bf-914c-6648a7db717b", initials: "OHH", color: "#9c27b0" },
+            { title: "Purecloud", url: "https://account.activedirectory.windowsazure.com/applications/signin/82e5a33a-010a-4e51-ae16-b640c34b0f99", initials: "PC", color: "#ff5722" },
+            { title: "Outlook", url: "https://outlook.office.com/mail/", initials: "OL", color: "#0078d4" },
+            { title: "Same & Similar", url: "https://toolbox.adapthealth.com/samesimiliar", initials: "SS", color: "#607d8b" },
+            { title: "Humana Lookup", url: "https://osapps.adapthealth.com/AC_CustomerService_UI/HumanaLookup", initials: "HL", color: "#4caf50" },
+            { title: "Locations", url: "https://adapthealth.com/locations/", initials: "LOC", color: "#795548" },
+            { title: "Cylinder", url: "https://c0cqk231.caspio.com/dp/c9a33000fb07015d90f44092b3c5", initials: "CYL", color: "#3f51b5" },
+            { title: "AH Central", url: "https://osapps.adapthealth.com/AH_Central_UI/Home", initials: "AH", color: "#2196f3" },
+            { title: "Simple fax", url: "https://osapps.adapthealth.com/AC_FaxingSuite_EU/SimpleOutboundFax", initials: "FAX", color: "#ffc107" },
+            { title: "Parachute", url: "https://launcher.myapps.microsoft.com/api/signin/438d4908-e073-47b6-ab34-c5d155eba961", initials: "PAR", color: "#00bcd4" },
+            { title: "Noridian", url: "https://www.noridianmedicareportal.com/group/end-user/sameandsimilar", initials: "NOR", color: "#673ab7" },
+            { title: "NPI Lookup", url: "https://progress.oandp.com/pecos/opie", initials: "NPI", color: "#009688" },
+            { title: "PDF Tools", url: "https://iamray13.github.io/PDF/", initials: "PDF", color: "#f44336" },
+            { title: "Copilot", url: "https://copilot.microsoft.com/", initials: "AI", color: "#e81e63" },
+            { title: "Attendance", url: "https://shorturl.at/eUx36", initials: "PDF", color: "#10a37f" },
+            { title: "Productivity Tracker", url: "https://shorturl.at/wqedG", initials: "PDF", color: "#10a37f" },
+            { title: "Recalculation", url: "https://shorturl.at/BNoqF", initials: "PDF", color: "#10a37f" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNotes();
+            loadLogicState();
+            loadAbbreviations();
+            updateTotalPatientCount(); 
+            initCalculator();
+            initMyApps();
+            initDocSystem();
+            initParachute(); // Init Parachute
+
+            document.getElementById('searchInput').addEventListener('input', (e) => renderSidebar(e.target.value));
+            document.getElementById('fileInput').addEventListener('change', handleImport);
+            document.getElementById('abbrInput').addEventListener('change', handleAbbrImport);
+            
+            const notepad = document.getElementById('notepad');
+            const savedHeader = localStorage.getItem(HEADER_PREF_KEY) || "StLukes";
+            notepad.value = savedHeader;
+
+            const autoResize = (el) => { el.style.height = 'auto'; el.style.height = (el.scrollHeight + 5) + 'px'; };
+            setTimeout(() => autoResize(notepad), 0);
+
+            notepad.addEventListener('input', function() { autoResize(this); updatePatientCountAndCheckMilestonesForActiveNote(); });
+            notepad.addEventListener('paste', (e) => { setTimeout(() => autoResize(e.target), 0); handleNotepadPasteForPatientInfo(e); });
+            notepad.addEventListener('keyup', (e) => { if (e.key === ' ') handleSpaceExpansion(e.target); autoResize(e.target); });
+            document.addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); handleSaveAction(); } else if (e.key.toLowerCase() === 's' && document.activeElement.tagName.toLowerCase() !== 'textarea' && document.activeElement.tagName.toLowerCase() !== 'input') { e.preventDefault(); toggleSidebar(); } });
+        });
+
+        /* --- Parachute Dashboard Logic --- */
+        function openParachute() {
+            document.getElementById('parachuteModal').classList.add('show');
+            document.getElementById('paraSearchInput').focus();
+            renderParachuteTable(parachuteData); // Render all on open
+        }
+
+        function initParachute() {
+            const searchInput = document.getElementById('paraSearchInput');
+            const clearBtn = document.getElementById('paraClearBtn');
+
+            // Initial Render
+            renderParachuteTable(parachuteData);
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                const filtered = parachuteData.filter(item => 
+                    Object.values(item).some(val => val.toLowerCase().includes(term))
+                );
+                renderParachuteTable(filtered, term);
+            });
+
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                renderParachuteTable(parachuteData);
+                searchInput.focus();
+            });
+        }
+
+        function renderParachuteTable(data, highlightTerm = '') {
+            const tbody = document.getElementById('paraTableBody');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="para-empty">No results found.</td></tr>`;
+                return;
+            }
+
+            const regex = highlightTerm ? new RegExp(`(${highlightTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi') : null;
+
+            data.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'fade-row';
+                tr.style.animationDelay = `${index * 0.03}s`; // Stagger effect
+
+                const cols = ['title', 'dashboard', 'region', 'database'];
+                cols.forEach(colKey => {
+                    const td = document.createElement('td');
+                    let content = row[colKey] || '';
+                    
+                    if(colKey === 'title') td.classList.add('highlight-cell');
+
+                    if (regex && content) {
+                        td.innerHTML = content.replace(regex, `<span class="para-highlight">$1</span>`);
+                    } else {
+                        td.textContent = content;
+                    }
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* --- Document Retrieval Logic --- */
+        function openDocSystem() {
+            document.getElementById('docsModal').classList.add('show');
+            document.getElementById('docSearchInput').focus();
+        }
+
+        function initDocSystem() {
+            // Search functionality
+            const searchInput = document.getElementById('docSearchInput');
+            const gridItems = document.querySelectorAll('.docs-grid .doc-btn');
+
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase().trim();
+                gridItems.forEach(item => {
+                    // Check text inside the span or data-title
+                    const text = item.querySelector('span').textContent.toLowerCase();
+                    const title = item.getAttribute('data-title').toLowerCase();
+                    if (text.includes(term) || title.includes(term)) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Button Click functionality (PDF Viewer)
+            gridItems.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const pdfPath = btn.getAttribute('data-pdf');
+                    const title = btn.getAttribute('data-title');
+                    if(pdfPath) {
+                        openPdfViewer(pdfPath, title);
+                    }
+                });
+            });
+        }
+
+        function openPdfViewer(path, title) {
+            const viewerModal = document.getElementById('pdfViewerModal');
+            const iframe = document.getElementById('pdfFrame');
+            const titleEl = document.getElementById('pdfViewerTitle');
+            
+            iframe.src = path;
+            titleEl.textContent = title;
+            viewerModal.classList.add('show');
+        }
+
+        /* --- MyApps Logic --- */
+        function openMyApps() {
+            document.getElementById('myAppsModal').classList.add('show');
+            document.getElementById('appSearchInput').focus();
+        }
+
+        function initMyApps() {
+            const container = document.getElementById('appLinksContainer');
+            const input = document.getElementById('appSearchInput');
+            const clearBtn = document.getElementById('appClearSearchBtn');
+
+            function renderApps(list) {
+                container.innerHTML = '';
+                list.forEach(app => {
+                    const item = document.createElement('div');
+                    item.className = 'link-item';
+                    
+                    // Create Avatar with Gradient based on app color
+                    const grad = `linear-gradient(135deg, ${app.color} 0%, #1e293b 100%)`;
+                    
+                    item.innerHTML = `
+                        <a href="${app.url}" target="_blank" rel="noopener noreferrer">
+                            <div class="img-container" style="background: ${grad}">
+                                <div class="app-avatar">${app.initials}</div>
+                            </div>
+                            <p>${app.title}</p>
+                        </a>
+                    `;
+                    
+                    // Add 3D effect listeners
+                    item.addEventListener('mousemove', (e) => {
+                        const rect = item.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        item.style.transform = `perspective(1000px) rotateX(${-y/5}deg) rotateY(${x/5}deg) scale(1.05)`;
+                    });
+                    item.addEventListener('mouseleave', () => {
+                        item.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                    });
+
+                    container.appendChild(item);
+                });
+            }
+
+            renderApps(myAppsData);
+
+            input.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                clearBtn.style.display = term ? 'block' : 'none';
+                const filtered = myAppsData.filter(app => app.title.toLowerCase().includes(term));
+                renderApps(filtered);
+            });
+
+            clearBtn.addEventListener('click', () => {
+                input.value = '';
+                clearBtn.style.display = 'none';
+                renderApps(myAppsData);
+                input.focus();
+            });
+        }
+
+        /* --- Calculator Logic --- */
+        function initCalculator() {
+            const refDateInput = document.getElementById("calcRefDate");
+            const daysInput = document.getElementById("calcDaysInput");
+            const now = new Date();
+            const offset = now.getTimezoneOffset();
+            const localDate = new Date(now.getTime() - (offset * 60 * 1000));
+            refDateInput.value = localDate.toISOString().split('T')[0];
+            calculateDates(); 
+            refDateInput.addEventListener("change", calculateDates);
+            daysInput.addEventListener("input", calculateDates);
+        }
+
+        function calculateDates() {
+            const refDateInput = document.getElementById("calcRefDate");
+            const daysInput = document.getElementById("calcDaysInput");
+            const dateVal = refDateInput.value;
+            const daysVal = parseInt(daysInput.value) || 0; 
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            document.getElementById("calc-label-before").textContent = `${daysVal || 0} Days Prior`;
+            document.getElementById("calc-label-after").textContent = `${daysVal || 0} Days After`;
+            if (!dateVal) return;
+            const baseDate = new Date(dateVal + "T12:00:00");
+            const dateBefore = new Date(baseDate); dateBefore.setDate(baseDate.getDate() - daysVal);
+            const dateAfter = new Date(baseDate); dateAfter.setDate(baseDate.getDate() + daysVal);
+            const fmt = (d) => { const mm = (d.getMonth() + 1).toString().padStart(2, '0'); const dd = d.getDate().toString().padStart(2, '0'); return `${mm}/${dd}/${d.getFullYear()}`; };
+            document.getElementById("calc-before-date").textContent = fmt(dateBefore);
+            document.getElementById("calc-after-date").textContent = fmt(dateAfter);
+            document.getElementById("calc-before-day").textContent = daysOfWeek[dateBefore.getDay()];
+            document.getElementById("calc-after-day").textContent = daysOfWeek[dateAfter.getDay()];
+        }
+
+        function copyCalcValue(id) {
+            const text = document.getElementById(id).innerText;
+            if (text.includes('--')) return;
+            copyToClipboard(text);
+        }
+
+        /* --- Main App Logic --- */
+        function handleSaveAction() {
+            const notepad = document.getElementById('notepad');
+            const content = notepad.value;
+            if(!content.trim()) return showToast("Cannot save empty note");
+            let newPref = null;
+            if(/aerocare/i.test(content)) newPref = "Aerocare"; else if(/\bohh\b/i.test(content)) newPref = "OHH"; else if(/stlukes/i.test(content)) newPref = "StLukes";
+            if(newPref) localStorage.setItem(HEADER_PREF_KEY, newPref);
+            if(currentEditingId) {
+                const note = notesData.find(n => n.id === currentEditingId);
+                if(note) { note.content = content; saveNotesToStorage(); showToast("Record Updated"); cancelEditMode(); }
+            } else {
+                const blocks = content.split(SEPARATOR).filter(b => b.trim() !== "");
+                blocks.reverse().forEach(block => { notesData.unshift({ id: Date.now() + Math.random(), content: block.trim(), timestamp: new Date().toLocaleString(), lastPatientCountForMilestone: 0 }); });
+                saveNotesToStorage(); showToast(`${blocks.length} Entry(s) Saved`);
+                notepad.value = newPref || localStorage.getItem(HEADER_PREF_KEY) || "StLukes";
+                notepad.style.height = 'auto'; renderSidebar();
+            }
+            updatePatientCountAndCheckMilestonesForActiveNote(); updateTotalPatientCount();
+        }
+
+        function startEditing(id) {
+            const note = notesData.find(n => n.id === id); if(!note) return;
+            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+            const notepad = document.getElementById('notepad'); notepad.value = note.content;
+            notepad.style.height = 'auto'; notepad.style.height = (notepad.scrollHeight + 5) + 'px';
+            notepad.focus(); currentEditingId = id;
+            document.getElementById('editorCard').classList.add('editing-mode'); document.getElementById('modeTitle').textContent = "Editing Record"; document.getElementById('modeTitle').style.color = "var(--primary)";
+            const saveBtn = document.getElementById('saveBtn'); saveBtn.textContent = "Update Note"; saveBtn.className = "btn btn-edit";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            updatePatientCountAndCheckMilestonesForActiveNote();
+        }
+
+        function cancelEditMode() {
+            currentEditingId = null; const notepad = document.getElementById('notepad');
+            notepad.value = localStorage.getItem(HEADER_PREF_KEY) || "StLukes"; notepad.style.height = 'auto';
+            document.getElementById('editorCard').classList.remove('editing-mode'); document.getElementById('modeTitle').textContent = "New Entry"; document.getElementById('modeTitle').style.color = "var(--text-heading)";
+            const saveBtn = document.getElementById('saveBtn'); saveBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save Note`; saveBtn.className = "btn btn-primary";
+            document.getElementById('cancelEditBtn').classList.add('hidden'); updatePatientCountAndCheckMilestonesForActiveNote();
+        }
+
+        function loadAbbreviations() { const stored = localStorage.getItem(ABBR_KEY); if (stored) { try { abbreviationList = JSON.parse(stored); } catch(e) { abbreviationList = DEFAULT_ABBRS; } } else { abbreviationList = DEFAULT_ABBRS; } }
+        function findExpansion(word) { const match = abbreviationList.find(item => item.abbr.toLowerCase() === word.toLowerCase()); return match ? match.expansion : null; }
+        function handleSpaceExpansion(textarea) {
+            const cursor = textarea.selectionStart; const text = textarea.value;
+            const beforeCursor = text.slice(0, cursor); const match = /(\S+)\s$/.exec(beforeCursor);
+            if (match) { const expansion = findExpansion(match[1]); if (expansion) { const newBefore = beforeCursor.slice(0, match.index) + expansion + " "; const afterCursor = text.slice(cursor); textarea.value = newBefore + afterCursor; textarea.selectionStart = textarea.selectionEnd = newBefore.length; updatePatientCountAndCheckMilestonesForActiveNote(); } }
+        }
+        function expandAllAbbreviationsInText(text) { return text.split(' ').map(token => { const exp = findExpansion(token); return exp ? exp : token; }).join(' '); }
+        function handleNotepadPasteForPatientInfo(event) {
+            const notepad = event.target; const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+            const patientInfoRegex = /^([A-Z\s,.\-]+)\s*\n\s*Patient ID\s*(\d+)\s*\nDOB\s*(\d{1,2}\/\d{1,2}\/\d{2,4})\s*$/im;
+            const match = pastedText.match(patientInfoRegex);
+            if (match) { event.preventDefault(); insertAtCursor(notepad, `${match[1].trim()}\nPatient ID ${match[2].trim()}\nDOB ${match[3].trim()}`); }
+            else { const expanded = expandAllAbbreviationsInText(pastedText); if(expanded !== pastedText){ event.preventDefault(); insertAtCursor(notepad, expanded); } }
+            updatePatientCountAndCheckMilestonesForActiveNote();
+        }
+        function extractPatientIDsFromText(text){ const ids = []; if(!text) return ids; const regex = /\bPatient ID\s*(\d+)\b/ig; for (const m of text.matchAll(regex)) { if (m && m[1]) ids.push(m[1]); } return ids; }
+        function extractPatientIDsGrouped(text){
+            const lines = (text || '').split(/\r?\n/); const groups = { "StLukes": [], "Aerocare": [], "OHH": [] };
+            let cur = null; const sr = /^(stl|stlukes)$/i, ar = /^(aerocare|ac|aero)$/i, or = /^(ohh)$/i;
+            for(const ln of lines){ const tr = ln.trim(); if(sr.test(tr)) cur = "StLukes"; else if(ar.test(tr)) cur = "Aerocare"; else if(or.test(tr)) cur = "OHH"; else { const m = /\bPatient ID\s*(\d+)\b/i.exec(tr); if(m && cur) groups[cur].push(m[1]); } } return groups;
+        }
+        function updatePatientCountAndCheckMilestonesForActiveNote(){
+            const activeContent = document.getElementById('notepad').value; const ids = extractPatientIDsFromText(activeContent || ''); const curCount = ids.length;
+            document.getElementById('activeCountEl').textContent = curCount;
+            let activeObj = currentEditingId ? notesData.find(n=>n.id===currentEditingId) : { lastPatientCountForMilestone: 0 };
+            if(!activeObj) activeObj = { lastPatientCountForMilestone: 0 };
+            if(curCount > activeObj.lastPatientCountForMilestone){
+                let trigMs = -1; const spMs = [10,20,30,40,50]; for(const m of spMs){ if(curCount>=m && !patientMilestonesReached.includes(m)){ trigMs = m; break; } }
+                if(curCount>50){ let ct = Math.floor(curCount/10)*10; if(ct>50 && !patientMilestonesReached.includes(ct) && (trigMs===-1 || ct>trigMs)) trigMs = ct; }
+                if(trigMs !== -1){ milestoneGreetingIndex = (milestoneGreetingIndex+1) % milestoneTitles.length; document.getElementById('greetingMessageEl').innerHTML = `Congratulations ${currentUserName}, you've logged <strong>${trigMs}</strong> patient IDs in this note!`; document.getElementById('greetingTitleEl').textContent = milestoneTitles[milestoneGreetingIndex]; document.getElementById('greetingModal').classList.add('show'); patientMilestonesReached.push(trigMs); saveLogicState(); }
+            }
+            activeObj.lastPatientCountForMilestone = curCount; checkForNewDuplicatesRealtime(activeContent || '');
+        }
+        function updateTotalPatientCount() { let total = 0; notesData.forEach(note => { total += extractPatientIDsFromText(note.content || '').length; }); document.getElementById('totalSavedCountEl').textContent = total; }
+        function checkForNewDuplicatesRealtime(curTxt){
+            const grps = extractPatientIDsGrouped(curTxt); const allIds = [ ...grps["StLukes"], ...grps["Aerocare"], ...grps["OHH"] ]; const counts = {}; allIds.forEach(id => counts[id] = (counts[id] || 0) + 1);
+            for (const id in counts) { if (counts[id] > 1) { if (!knownDuplicateIDsForAlert.has(id)) { showToast(`Duplicate ID Detected: ${id}`, true); knownDuplicateIDsForAlert.add(id); } } }
+        }
+        function renderSidebar(query = "") {
+            const list = document.getElementById('notesList'); list.innerHTML = ""; const filtered = notesData.filter(n => n.content.toLowerCase().includes(query.toLowerCase()));
+            if(!filtered.length) { list.innerHTML = `<div style="text-align:center; padding:1rem; color:#94a3b8; font-size:0.9rem;">No records found.</div>`; return; }
+            filtered.forEach(note => {
+                const d = document.createElement('div'); d.className = 'note-card';
+                d.innerHTML = `<div class="note-meta"><span>#${note.id.toString().slice(-4)}</span><span>${note.timestamp.split(',')[0]}</span></div><div class="note-preview">${escapeHtml(note.content)}</div><div class="note-actions"><button class="action-btn action-tooltip" data-tip="Copy" onclick="copyToClipboard(\`${escapeHtml(note.content).replace(/`/g, "\\`")}\`)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button><button class="action-btn edit action-tooltip" data-tip="Edit" onclick="startEditing(${note.id})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button><button class="action-btn delete action-tooltip" data-tip="Delete" onclick="deleteNote(${note.id})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>`;
+                list.appendChild(d);
+            });
+        }
+        function renderPatientIDsModal(onlyDuplicates = false){
+            const patientIDsContent = document.getElementById('patientIDsContent'); const patientIDsModal = document.getElementById('patientIDsModal');
+            const agg = { "StLukes": {}, "Aerocare": {}, "OHH": {} }; notesData.forEach(n => { const groups = extractPatientIDsGrouped(n.content || ''); for(const loc of Object.keys(groups)){ groups[loc].forEach(id => { agg[loc][id] = (agg[loc][id] || 0) + 1; }); } });
+            patientIDsContent.innerHTML = ''; const any = Object.keys(agg).some(g => Object.keys(agg[g]).length > 0);
+            if(!any){ patientIDsContent.innerHTML = '<div style="padding:1rem; color:var(--text-muted); text-align:center;">No patient IDs found in any note.</div>'; patientIDsModal.classList.add('show'); return; }
+            for(const loc of Object.keys(agg)){
+                const ids = Object.keys(agg[loc]).sort((a,b)=>Number(a)-Number(b)); if(ids.length === 0) continue;
+                const groupDiv = document.createElement('div'); groupDiv.className = 'pid-group'; const heading = document.createElement('div'); heading.className = 'pid-group-title'; heading.textContent = loc + ` (${ids.length})`; groupDiv.appendChild(heading);
+                const grid = document.createElement('div'); grid.className = 'pid-grid';
+                ids.forEach(id => { const count = agg[loc][id]; if(onlyDuplicates && count < 2) return; const item = document.createElement('div'); item.className = 'pid-item' + (count > 1 ? ' duplicate' : ''); const left = document.createElement('span'); left.textContent = id; const right = document.createElement('span'); if(count>1) { right.textContent = `×${count}`; right.style.fontWeight='bold'; } item.appendChild(left); item.appendChild(right); item.onclick = () => { patientIDsModal.classList.remove('show'); renderSidebar(id); if(!document.getElementById('sidebar').classList.contains('active')) toggleSidebar(); }; grid.appendChild(item); });
+                if(grid.hasChildNodes()) { groupDiv.appendChild(grid); patientIDsContent.appendChild(groupDiv); }
+            }
+            patientIDsModal.classList.add('show');
+        }
+        function copyAllIDs() {
+            const agg = { "StLukes": [], "Aerocare": [], "OHH": [] }; notesData.forEach(n => { const groups = extractPatientIDsGrouped(n.content || ''); for(const loc of Object.keys(groups)){ agg[loc].push(...groups[loc]); } });
+            let clipboardText = ""; ["StLukes", "Aerocare", "OHH"].forEach(key => { if(agg[key].length > 0) { clipboardText += `${key}\n`; clipboardText += agg[key].sort((a,b) => Number(a)-Number(b)).join('\n') + `\n\n`; } });
+            if(!clipboardText.trim()) return showToast("No IDs to copy"); copyToClipboard(clipboardText);
+        }
+        function deleteNote(id) { if(confirm("Delete this record?")) { notesData = notesData.filter(n => n.id !== id); saveNotesToStorage(); renderSidebar(document.getElementById('searchInput').value); if(currentEditingId === id) cancelEditMode(); updateTotalPatientCount(); showToast("Deleted"); } }
+        function saveNotesToStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(notesData)); }
+        function loadNotes() { const d = localStorage.getItem(STORAGE_KEY); if(d) try{ notesData = JSON.parse(d); }catch(e){ notesData=[]; } }
+        function saveLogicState() { localStorage.setItem('logic_state', JSON.stringify({ milestones: patientMilestonesReached })); }
+        function loadLogicState() { const d = localStorage.getItem('logic_state'); if(d) { try { const p = JSON.parse(d); patientMilestonesReached = p.milestones||[]; } catch(e){} } }
+        function toggleSidebar() { const s = document.getElementById('sidebar'), o = document.getElementById('overlay'); s.classList.toggle('active'); o.classList.toggle('active'); if(s.classList.contains('active')) { renderSidebar(document.getElementById('searchInput').value); document.getElementById('searchInput').focus(); } }
+        function escapeHtml(str) { return str ? str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ""; }
+        function showToast(msg, isWarning=false) { const t = document.getElementById('toast'); t.textContent = msg; t.style.background = isWarning ? 'var(--danger)' : 'var(--text-heading)'; t.classList.add('show'); setTimeout(()=> { t.classList.remove('show'); }, 3000); }
+        function copyToClipboard(txt) { const ta = document.createElement('textarea'); ta.innerHTML = txt; navigator.clipboard.writeText(ta.value).then(()=>showToast("Copied: " + txt.substring(0,20) + (txt.length>20?"...":""))); }
+        function insertAtCursor(textarea, text) { const start = textarea.selectionStart, end = textarea.selectionEnd; textarea.value = textarea.value.substring(0, start) + text + textarea.value.substring(end); textarea.selectionStart = textarea.selectionEnd = start + text.length; }
+        function getFormattedDateString() { const now = new Date(); return now.toISOString().replace(/[:.]/g, '-').slice(0, 19); }
+        function exportData() { if(!notesData.length) return showToast("No data to export"); const txt = notesData.map(n => n.content).join(`\n\n${SEPARATOR}\n\n`); downloadFile(txt, `60monthrestart_${getFormattedDateString()}.txt`); }
+        function handleImport(e) { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = (evt) => { const b = evt.target.result.split(SEPARATOR).filter(x=>x.trim()); b.reverse().forEach(c => notesData.unshift({ id: Date.now()+Math.random(), content: c.trim(), timestamp: new Date().toLocaleString() })); saveNotesToStorage(); showToast(`Imported ${b.length}`); toggleSidebar(); updateTotalPatientCount(); }; r.readAsText(f); }
+        function downloadFile(content, filename) { const blob = new Blob([content], {type: "text/plain"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); }
+        function openAbbrModal() { document.getElementById('abbrModal').classList.add('show'); }
+        function exportAbbreviations() { downloadFile(JSON.stringify(abbreviationList, null, 2), `Abbreviations_${getFormattedDateString()}.json`); }
+        function handleAbbrImport(e) { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = (evt) => { try { const data = JSON.parse(evt.target.result); if(Array.isArray(data)) { abbreviationList = data; localStorage.setItem(ABBR_KEY, JSON.stringify(abbreviationList)); showToast(`Imported ${data.length} abbreviations`); document.getElementById('abbrModal').classList.remove('show'); } else { throw new Error(); } } catch(err) { alert("Invalid JSON file"); } e.target.value = ""; }; r.readAsText(f); }
+    </script>
+</body>
+</html>
