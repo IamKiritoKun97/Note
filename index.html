@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>60monthrestart | Professional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Combined Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* --- Light Mode (Default) --- */
+            --bg-body: #f1f5f9;
+            --bg-surface: #ffffff;
+            --bg-sidebar: #ffffff;
+            --bg-input: #ffffff;
+            --text-main: #334155;
+            --text-heading: #0f172a;
+            --text-muted: #94a3b8;
+            --brand-dark: #1e293b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --sidebar-width: 420px;
+            --radius: 8px;
+            --header-height: 64px;
+            --font-stack: 'Inter', system-ui, -apple-system, sans-serif;
+            
+            /* Modern Toggle Button Colors */
+            --btn-toggle-bg: #1e293b;
+            --btn-toggle-text: #ffffff;
+        }
+
+        /* --- Dark Mode Variables --- */
+        body.dark-mode {
+            --bg-body: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-sidebar: #1e293b;
+            --bg-input: #334155;
+            --text-main: #e2e8f0;
+            --text-heading: #f8fafc;
+            --text-muted: #94a3b8;
+            --brand-dark: #f8fafc;
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --primary-light: #1e3a8a;
+            --border: #334155;
+            --danger: #f87171;
+            --danger-bg: #450a0a;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            
+            --btn-toggle-bg: #ffffff;
+            --btn-toggle-text: #0f172a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: var(--font-stack);
+            height: 100vh;
+            overflow: hidden; 
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- Components --- */
+        .hidden { display: none !important; }
+        
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 0.6rem 1.1rem; border-radius: var(--radius); font-weight: 500; cursor: pointer;
+            border: 1px solid transparent; transition: all 0.2s ease; font-size: 0.875rem;
+            white-space: nowrap;
+        }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2); }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-edit { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+        .btn-edit:hover { background: #fef3c7; }
+        .btn-ghost { background: transparent; color: var(--text-muted); }
+        .btn-ghost:hover { background: var(--bg-body); color: var(--text-heading); }
+        .btn-outline { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); box-shadow: var(--shadow-sm); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* Modern Sidebar Toggle Button */
+        .menu-toggle-btn {
+            background: transparent; border: none; cursor: pointer; padding: 8px;
+            border-radius: 50%; color: var(--text-heading);
+            transition: background 0.2s, transform 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .menu-toggle-btn:hover { background: var(--border); transform: rotate(90deg); }
+
+        /* Dark Mode Toggle Button */
+        .theme-toggle-btn {
+            background-color: var(--btn-toggle-bg);
+            color: var(--btn-toggle-text);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex; align-items: center; gap: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+        .theme-toggle-btn:hover { transform: scale(1.05); }
+
+        /* --- Navbar --- */
+        .navbar {
+            height: var(--header-height); 
+            background: var(--bg-surface); 
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem;
+            position: fixed; top: 0; width: 100%; z-index: 20;
+            box-shadow: var(--shadow-sm);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .brand { font-weight: 700; font-size: 1.25rem; color: var(--brand-dark); display: flex; align-items: center; gap: 10px; }
+        .brand span { background: linear-gradient(135deg, var(--brand-dark) 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Navbar Items Grouping */
+        .nav-left { display: flex; align-items: center; gap: 1rem; }
+        .nav-right { display: flex; align-items: center; gap: 0.5rem; overflow-x: auto; padding-bottom: 2px; }
+        /* Hide scrollbar for nav right if it overflows */
+        .nav-right::-webkit-scrollbar { height: 0px; background: transparent; }
+
+        /* --- Layout --- */
+        .main-container {
+            margin-top: var(--header-height); 
+            height: calc(100vh - var(--header-height)); 
+            display: flex; align-items: flex-start; justify-content: center;
+            padding: 2rem; overflow-y: auto;
+        }
+
+        .editor-card {
+            background: var(--bg-surface); border-radius: 16px; 
+            border: 1px solid var(--border); padding: 3rem; 
+            width: 100%; max-width: 900px;
+            display: flex; flex-direction: column; 
+            position: relative;
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.3s ease, background-color 0.3s, border-color 0.3s;
+            margin-bottom: 3rem; 
+        }
+        .editor-card.editing-mode { border-color: #fcd34d; box-shadow: 0 0 0 4px rgba(253, 224, 71, 0.3); }
+
+        .top-status-bar { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px dashed var(--border); }
+        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .editor-title { font-size: 1.5rem; font-weight: 700; color: var(--text-heading); }
+        .status-item { display: flex; align-items: center; gap: 8px; background: var(--bg-body); padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .status-value { color: var(--primary); font-weight: 700; }
+
+        textarea.main-input {
+            width: 100%; min-height: 600px; border: none; resize: none; outline: none;
+            font-family: var(--font-stack); font-size: 1.05rem; line-height: 1.7; color: var(--text-heading);
+            background: transparent; overflow-y: hidden; padding: 10px; box-sizing: border-box;
+        }
+        textarea.main-input::placeholder { color: var(--text-muted); font-weight: 300; opacity: 0.6; }
+
+        /* --- Sidebar --- */
+        .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(2px); z-index: 40; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .overlay.active { opacity: 1; visibility: visible; }
+        .sidebar {
+            position: fixed; top: 0; bottom: 0; left: 0; width: var(--sidebar-width);
+            background: var(--bg-sidebar); z-index: 50; transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; box-shadow: 20px 0 40px -10px rgba(0,0,0,0.1);
+        }
+        .sidebar.active { transform: translateX(0); }
+        .sidebar-header { padding: 1.5rem; border-bottom: 1px solid var(--border); background: var(--bg-surface); display: flex; flex-direction: column; gap: 1rem; }
+        
+        .sidebar-close-btn {
+            background: var(--danger-bg); color: var(--danger); border: none;
+            border-radius: 8px; padding: 6px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sidebar-close-btn:hover { background: var(--danger); color: white; }
+
+        .sidebar-title { font-weight: 700; font-size: 1.1rem; color: var(--text-heading); }
+        .search-input { width: 100%; padding: 12px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-input); color: var(--text-main); }
+        .search-input:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px var(--primary-light); }
+        
+        .notes-list { flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 16px; background: var(--bg-body); }
+        
+        .note-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; transition: all 0.2s ease; cursor: pointer; position: relative; box-shadow: var(--shadow-sm); }
+        .note-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .note-meta { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 0.75rem; }
+        .note-preview { font-size: 0.9rem; color: var(--text-main); max-height: 80px; overflow: hidden; margin-bottom: 1rem; white-space: pre-wrap; line-height: 1.5; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
+        .note-actions { display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border); padding-top: 10px; }
+        .action-btn { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 6px; border: 1px solid transparent; cursor: pointer; transition: all 0.2s; background: var(--bg-body); color: var(--text-muted); }
+        .action-btn:hover { border-color: var(--border); color: var(--primary); background: var(--primary-light); }
+        .action-btn.delete:hover { border-color: #fecaca; color: var(--danger); background: var(--danger-bg); }
+
+        /* --- Modals --- */
+        .modal { position: fixed; inset: 0; z-index: 100; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; pointer-events: none; }
+        .modal.show { opacity: 1; visibility: visible; pointer-events: auto; }
+        .modal-bg { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.7); }
+        .modal-content { position: relative; background: var(--bg-surface); width: 90%; max-width: 700px; padding: 0; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); transform: translateY(15px); transition: 0.3s; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); }
+        .modal.show .modal-content { transform: translateY(0); }
+        .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface); color: var(--text-heading); }
+        .modal-body { padding: 2rem; overflow-y: auto; background: var(--bg-body); }
+        .modal-title { font-weight: 700; font-size: 1.1rem; }
+
+        /* PID Grid */
+        .pid-group { margin-bottom: 2rem; }
+        .pid-group-title { font-size: 0.8rem; text-transform: uppercase; color: var(--primary); font-weight: 700; margin-bottom: 12px; border-bottom: 2px solid var(--primary-light); padding-bottom: 6px; }
+        .pid-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+        .pid-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; font-size: 0.9rem; cursor: pointer; border-radius: 6px; background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-main); font-weight: 500; }
+        .pid-item:hover { background: var(--bg-body); border-color: var(--primary); color: var(--primary); box-shadow: var(--shadow-sm); }
+        .pid-item.duplicate { color: var(--danger); background: var(--danger-bg); border-color: var(--danger); }
+
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px); background: var(--text-heading); color: var(--bg-surface); padding: 12px 28px; border-radius: 50px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); transition: 0.4s; z-index: 200; font-weight: 500; font-size: 0.95rem; }
+        .toast.show { transform: translate(-50%, 0); }
+        .toast.warning { background: var(--danger); color: white; }
+        
+        input[type="file"] { display: none; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; border: 2px solid transparent; background-clip: content-box; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- Calculator (Scoped) --- */
+        .calc-wrapper .config-card { background: var(--bg-surface); padding: 24px; border-radius: 16px; border: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .calc-wrapper .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .calc-wrapper label { font-size: 0.875rem; font-weight: 600; color: var(--text-main); }
+        .calc-wrapper input { padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; outline: none; background: var(--bg-input); color: var(--text-main); width: 100%; }
+        .calc-wrapper .display-card { background: var(--bg-surface); border-radius: 16px; padding: 24px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .calc-wrapper .card-meta { color: var(--primary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; background: var(--primary-light); padding: 4px 10px; border-radius: 6px; }
+        .calc-wrapper .date-val { font-size: 2rem; font-weight: 800; color: var(--text-heading); }
+        .calc-wrapper .day-val { font-size: 1rem; color: var(--text-muted); }
+
+        /* --- MyApps (Dark Theme Enforced Inside Modal) --- */
+        .myapps-wrapper {
+            font-family: 'Open Sans', sans-serif;
+            color: #e0e6f0;
+            background-color: #0a0f18;
+            min-height: 400px;
+            padding: 30px;
+        }
+        .myapps-wrapper .search-container input {
+            padding: 15px 50px; width: 100%; border: 1px solid rgba(100, 120, 150, 0.3);
+            border-radius: 30px; background: rgba(10, 15, 24, 0.7); color: #e0e6f0; outline: none;
+        }
+        .myapps-wrapper .links-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 25px; }
+        .myapps-wrapper .link-item { text-align: center; padding: 15px; border-radius: 15px; background: rgba(28, 35, 55, 0.7); border: 1px solid rgba(0, 242, 255, 0.2); cursor: pointer; transition: 0.2s; }
+        .myapps-wrapper .link-item:hover { border-color: #00f2ff; box-shadow: 0 0 15px rgba(0, 242, 255, 0.5); transform: translateY(-5px); }
+        .myapps-wrapper .img-container { width: 70px; height: 70px; border-radius: 8px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        .myapps-wrapper p { font-size: 0.9rem; color: #9fadcf; margin: 0; }
+
+        /* --- Docs System (Dark Theme Enforced) --- */
+        .docs-wrapper { background-color: #111827; color: white; padding: 30px; min-height: 400px; }
+        .docs-search-bar input { width: 100%; background: #1f2937; border: 1px solid #374151; padding: 14px 14px 14px 45px; border-radius: 8px; color: white; }
+        .docs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .doc-btn { aspect-ratio: 1/1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 12px; border: none; cursor: pointer; color: white; padding: 1rem; transition: transform 0.2s; }
+        .doc-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .doc-btn svg { width: 40px; height: 40px; margin-bottom: 10px; fill: currentColor; }
+
+        /* --- Parachute (Scoped) --- */
+        .parachute-wrapper { background: var(--bg-body); padding: 24px; min-height: 500px; color: var(--text-main); }
+        .para-controls { display: flex; gap: 12px; margin-bottom: 24px; }
+        .para-search-input { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg-surface); color: var(--text-main); }
+        table.para-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border-radius: 8px; overflow: hidden; }
+        table.para-table th { background: #1e293b; color: #f8fafc; padding: 14px; text-align: left; font-size: 0.8rem; text-transform: uppercase; }
+        table.para-table td { padding: 14px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        table.para-table tr:hover { background: var(--bg-body); }
+        .para-highlight { background-color: rgba(37, 99, 235, 0.2); color: var(--primary); padding: 2px 4px; border-radius: 4px; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="sidebar-title">History</span>
+                <button class="sidebar-close-btn" onclick="toggleSidebar()" title="Close Sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search records...">
+        </div>
+        <div class="notes-list" id="notesList"></div>
+    </aside>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <!-- Modern Menu Toggle -->
+            <button class="menu-toggle-btn" onclick="toggleSidebar()" title="Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="brand"><span>60monthrestart</span></div>
+        </div>
+        
+        <div class="nav-right">
+            <!-- Buttons fixed by ensuring IDs and functions match -->
+            <button class="btn btn-outline" onclick="openParachute()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-7.75 4.34"></path><path d="M19.75 6.34A10 10 0 0 0 12 2"></path><path d="M22 12c0 5.5-4.5 10-10 10S2 17.5 2 12"></path></svg>
+                Parachute
+            </button>
+            <button class="btn btn-outline" onclick="openDocSystem()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+                Docs
+            </button>
+            <button class="btn btn-outline" onclick="openMyApps()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                MyApps
+            </button>
+            
+            <button class="btn btn-outline" onclick="document.getElementById('calcModal').classList.add('show')">Calc</button>
+            <button class="btn btn-outline" onclick="renderPatientIDsModal(false)">IDs</button>
+            <button class="btn btn-outline" onclick="openAbbrModal()">Abbr</button>
+            <button class="btn btn-outline" onclick="exportData()">Export</button>
+            <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">Import</button>
+            
+            <!-- Dark Mode Toggle -->
+            <button class="theme-toggle-btn" onclick="toggleDarkMode()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                Theme
+            </button>
+
+            <input type="file" id="fileInput" accept=".txt" class="hidden">
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="editor-card" id="editorCard">
+            <div class="top-status-bar">
+                <div class="status-item">
+                    <span>Active IDs:</span>
+                    <span id="activeCountEl" class="status-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span>Total Saved IDs:</span>
+                    <span id="totalSavedCountEl" class="status-value">0</span>
+                </div>
+            </div>
+
+            <div class="editor-header">
+                <div>
+                    <span id="modeTitle" class="editor-title">New Entry</span>
+                    <button id="cancelEditBtn" class="btn btn-ghost hidden" onclick="cancelEditMode()" style="font-size:0.75rem; color:var(--danger); margin-left: 10px;">Cancel</button>
+                </div>
+                <button id="saveBtn" class="btn btn-primary" onclick="handleSaveAction()" title="Ctrl + S">
+                    Save Note
+                </button>
+            </div>
+            
+            <textarea id="notepad" class="main-input" placeholder="Type or Paste Patient Info here...&#10;Shortcuts expand with Space.&#10;Press 'Ctrl+S' to save."></textarea>
+        </div>
+    </main>
+
+    <!-- === MODALS === -->
+
+    <!-- Parachute Modal -->
+    <div id="parachuteModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('parachuteModal').classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 1000px; height: 85vh;">
+            <div class="modal-header">
+                <h3 class="modal-title">Parachute Dashboard</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('parachuteModal').classList.remove('show')">✕</button>
+            </div>
+            <div class="modal-body parachute-wrapper">
+                <div class="para-controls">
+                    <input type="text" id="paraSearchInput" class="para-search-input" placeholder="Search locations...">
+                    <button class="btn btn-outline" id="paraClearBtn">Clear</button>
+                </div>
+                <div style="overflow-y:auto; flex:1; max-height: 60vh;">
+                    <table class="para-table" id="paraTable">
+                        <thead><tr><th>State / Title</th><th>Dashboard</th><th>Region</th><th>Database</th></tr></thead>
+                        <tbody id="paraTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Docs Modal -->
+    <div id="docsModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('docsModal').classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header" style="background:#1f2937; color:white; border-bottom:1px solid #374151;">
+                <h3 class="modal-title">Documents</h3>
+                <button class="btn btn-ghost" style="color:#9ca3af" onclick="document.getElementById('docsModal').classList.remove('show')">✕</button>
+            </div>
+            <div class="modal-body docs-wrapper">
+                <div class="docs-search-bar">
+                    <input type="text" id="docSearchInput" placeholder="Search documents...">
+                </div>
+                <div class="docs-grid" id="docsGrid">
+                    <!-- Buttons injected via JS or static below -->
+                    <button class="doc-btn" style="background:#0ea5e9" data-pdf="assets/6MWT.pdf" data-title="6MWT"><span>6MWT</span></button>
+                    <button class="doc-btn" style="background:#84cc16" data-pdf="assets/TSS.pdf" data-title="TSS"><span>TSS</span></button>
+                    <button class="doc-btn" style="background:#f97316" data-pdf="assets/ONO.pdf" data-title="ONO"><span>ONO</span></button>
+                    <button class="doc-btn" style="background:#ec4899" data-pdf="assets/ABG.pdf" data-title="ABG"><span>ABG</span></button>
+                    <button class="doc-btn" style="background:#7c3aed" data-pdf="assets/POC Rx.pdf" data-title="POC Rx"><span>POC Rx</span></button>
+                    <button class="doc-btn" style="background:#facc15; color:#333" data-pdf="assets/Addendum.pdf" data-title="Addendum"><span>Addendum</span></button>
+                    <button class="doc-btn" style="background:#1e40af" data-pdf="assets/Clinical notes.pdf" data-title="Clinical"><span>Clinical</span></button>
+                    <button class="doc-btn" style="background:#dc2626" data-pdf="assets/60monthletter.pdf" data-title="60 Month"><span>60 Month</span></button>
+                    <button class="doc-btn" style="background:#6366f1" data-pdf="assets/Discontinue Script.pdf" data-title="Discontinue"><span>Discontinue</span></button>
+                    <button class="doc-btn" style="background:#16a34a" data-pdf="assets/CPAP.pdf" data-title="CPAP"><span>CPAP</span></button>
+                    <button class="doc-btn" style="background:#14b8a6" data-pdf="assets/Oxygen Requalification.pdf" data-title="Oxygen"><span>Oxygen</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MyApps Modal -->
+    <div id="myAppsModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('myAppsModal').classList.remove('show')"></div>
+        <div class="modal-content" style="max-width: 900px; background:#0a0f18;">
+            <div class="modal-header" style="background:rgba(20,25,40,0.9); border-bottom:1px solid rgba(0,242,255,0.2); color:#e0e6f0;">
+                <h3 class="modal-title" style="color:#00f2ff;">MyApps Portal</h3>
+                <button class="btn btn-ghost" style="color:#9fadcf" onclick="document.getElementById('myAppsModal').classList.remove('show')">✕</button>
+            </div>
+            <div class="modal-body myapps-wrapper">
+                <div class="search-container">
+                    <input type="text" id="appSearchInput" placeholder="Search applications...">
+                </div>
+                <div class="links-container" id="appLinksContainer" style="margin-top:20px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdfViewerModal" class="modal" style="z-index: 110;">
+        <div class="modal-bg" onclick="document.getElementById('pdfViewerModal').classList.remove('show')"></div>
+        <div class="modal-content" style="height:90vh; max-width:900px;">
+            <div class="modal-header">
+                <h3 id="pdfViewerTitle" class="modal-title">Document</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('pdfViewerModal').classList.remove('show')">✕</button>
+            </div>
+            <iframe id="pdfFrame" style="width:100%; flex:1; border:none; background:white;"></iframe>
+        </div>
+    </div>
+
+    <!-- Calculator Modal -->
+    <div id="calcModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('calcModal').classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Date Calculator</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('calcModal').classList.remove('show')">✕</button>
+            </div>
+            <div class="modal-body calc-wrapper">
+                <section class="config-card">
+                    <div class="input-group">
+                      <label>Reference Date</label>
+                      <input type="date" id="calcRefDate" />
+                    </div>
+                    <div class="input-group">
+                      <label>Days Offset</label>
+                      <input type="number" id="calcDaysInput" value="90" min="1" />
+                    </div>
+                </section>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                    <div class="display-card" onclick="copyCalcValue('calc-before-date')">
+                        <span class="card-meta" id="calc-label-before">90 Days Prior</span>
+                        <div id="calc-before-date" class="date-val">--/--/--</div>
+                        <div id="calc-before-day" class="day-val">--</div>
+                    </div>
+                    <div class="display-card" onclick="copyCalcValue('calc-after-date')">
+                        <span class="card-meta" id="calc-label-after">90 Days After</span>
+                        <div id="calc-after-date" class="date-val">--/--/--</div>
+                        <div id="calc-after-day" class="day-val">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Abbr Modal -->
+    <div id="abbrModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('abbrModal').classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Abbreviations</h3>
+                <button class="btn btn-ghost" onclick="document.getElementById('abbrModal').classList.remove('show')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="color:var(--text-main); margin-bottom:1rem;">Type shortcut + <strong>Space</strong> to expand.</p>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-primary" onclick="exportAbbreviations()">Export JSON</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('abbrInput').click()">Import JSON</button>
+                    <input type="file" id="abbrInput" accept=".json" class="hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- IDs Modal -->
+    <div id="patientIDsModal" class="modal">
+        <div class="modal-bg" onclick="document.getElementById('patientIDsModal').classList.remove('show')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Patient IDs</h3>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="copyAllIDs()">Copy All</button>
+                    <button class="btn btn-ghost" onclick="document.getElementById('patientIDsModal').classList.remove('show')">✕</button>
+                </div>
+            </div>
+            <div class="modal-body" id="patientIDsContent"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Action Saved</div>
+
+    <script>
+        /* --- Data Definitions --- */
+        // Simplified/Cleaned Parachute Data
+        const parachuteData = [
+            { title: "Alabama", dashboard: "AdaptHealth/Aerocare South", region: "South", database: "Aerocare" },
+            { title: "Arkansas", dashboard: "Aerocare (AR)", region: "AR", database: "Aerocare" },
+            { title: "Arizona", dashboard: "AdaptHealth West", region: "West", database: "St Lukes/Adapt" },
+            { title: "California", dashboard: "AdaptHealth West", region: "West", database: "St Lukes/Adapt" },
+            { title: "Colorado", dashboard: "Aerocare/AdaptHealth", region: "Mountain", database: "Aerocare" },
+            { title: "Connecticut", dashboard: "AdaptHealth New England", region: "East", database: "OHH" },
+            { title: "Florida", dashboard: "Aerocare (FL)", region: "FL", database: "Aerocare" },
+            { title: "Georgia", dashboard: "AdaptHealth Georgia", region: "GA", database: "Aerocare" },
+            { title: "Illinois", dashboard: "Total Home Health", region: "IL", database: "Adapt" },
+            { title: "Indiana", dashboard: "Airway Oxygen", region: "Northern IN", database: "Aerocare" },
+            { title: "Kansas", dashboard: "Aerocare Midwest", region: "Midwest", database: "Aerocare" },
+            { title: "Kentucky", dashboard: "AdaptHealth KY", region: "KY", database: "St Lukes" },
+            { title: "Louisiana", dashboard: "AdaptHealth South", region: "South", database: "Aerocare" },
+            { title: "Michigan", dashboard: "Airway Oxygen", region: "MI", database: "Aerocare" },
+            { title: "New York", dashboard: "Landauer Medstar", region: "East", database: "OHH" },
+            { title: "Ohio", dashboard: "AdaptHealth East", region: "OH", database: "Aerocare" },
+            { title: "Pennsylvania", dashboard: "AdaptHealth MidAtlantic", region: "MidAtlantic", database: "St Lukes" },
+            { title: "Texas", dashboard: "AdaptHealth Texas", region: "TX", database: "St Lukes" },
+            { title: "Washington", dashboard: "AdaptHealth PNW", region: "PNW", database: "St Lukes" }
+        ];
+
+        // MyApps Data
+        const myAppsData = [
+            { title: "Myapps", url: "https://myapps.microsoft.com/", initials: "MA", color: "#00a8e8" },
+            { title: "Patient Search", url: "https://osapps.adapthealth.com/patientsearch/", initials: "PS", color: "#00cc88" },
+            { title: "MyCGS", url: "https://mycgsportal.com/", initials: "CGS", color: "#3366cc" },
+            { title: "Aerocare", url: "#", initials: "AC", color: "#e81e63" },
+            { title: "StLukes", url: "#", initials: "STL", color: "#ff9800" },
+            { title: "OHH", url: "#", initials: "OHH", color: "#9c27b0" },
+            { title: "Outlook", url: "https://outlook.office.com/", initials: "OL", color: "#0078d4" },
+            { title: "Copilot", url: "https://copilot.microsoft.com/", initials: "AI", color: "#e81e63" }
+        ];
+
+        const DEFAULT_ABBRS = [
+            {"abbr": "vm","expansion": "Voicemail"},
+            {"abbr": "gtg","expansion": "got to go"},
+            {"abbr": "brb","expansion": "be right back"}
+        ];
+
+        /* --- Application Logic --- */
+        const STORAGE_KEY = "60month_db_v2";
+        const ABBR_KEY = "60month_abbr_v2";
+        const THEME_KEY = "60month_theme";
+        const HEADER_PREF_KEY = "60month_header_pref";
+        
+        let notesData = [];
+        let currentEditingId = null;
+        let abbreviationList = [];
+
+        /* --- Initialization --- */
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadNotes();
+            loadAbbreviations();
+            updateTotalPatientCount();
+            
+            initCalculator();
+            initMyApps();
+            initParachute();
+            initDocs();
+            
+            // Textarea setup
+            const notepad = document.getElementById('notepad');
+            notepad.value = localStorage.getItem(HEADER_PREF_KEY) || "StLukes";
+            notepad.addEventListener('input', function() { autoResize(this); updateActiveCounts(); });
+            notepad.addEventListener('keyup', (e) => { if(e.key === ' ') handleSpaceExpansion(e.target); });
+            
+            // Search setup
+            document.getElementById('searchInput').addEventListener('input', (e) => renderSidebar(e.target.value));
+            document.getElementById('fileInput').addEventListener('change', handleImport);
+            document.getElementById('abbrInput').addEventListener('change', handleAbbrImport);
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); handleSaveAction(); }
+            });
+        });
+
+        /* --- Functions for Buttons (Make sure these are global) --- */
+        window.openParachute = function() {
+            document.getElementById('parachuteModal').classList.add('show');
+            document.getElementById('paraSearchInput').focus();
+            renderParachuteTable(parachuteData);
+        };
+
+        window.openDocSystem = function() {
+            document.getElementById('docsModal').classList.add('show');
+            document.getElementById('docSearchInput').focus();
+        };
+
+        window.openMyApps = function() {
+            document.getElementById('myAppsModal').classList.add('show');
+            document.getElementById('appSearchInput').focus();
+        };
+
+        window.openAbbrModal = function() {
+            document.getElementById('abbrModal').classList.add('show');
+        };
+
+        window.toggleSidebar = function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+            if(document.getElementById('sidebar').classList.contains('active')) {
+                renderSidebar(document.getElementById('searchInput').value);
+            }
+        };
+
+        /* --- Theme Logic --- */
+        window.toggleDarkMode = function() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+        };
+
+        function loadTheme() {
+            const pref = localStorage.getItem(THEME_KEY);
+            if (pref === 'dark') document.body.classList.add('dark-mode');
+        }
+
+        /* --- Parachute Logic --- */
+        function initParachute() {
+            const input = document.getElementById('paraSearchInput');
+            const clear = document.getElementById('paraClearBtn');
+            
+            input.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = parachuteData.filter(d => 
+                    d.title.toLowerCase().includes(term) || 
+                    d.dashboard.toLowerCase().includes(term)
+                );
+                renderParachuteTable(filtered, term);
+            });
+
+            clear.addEventListener('click', () => {
+                input.value = '';
+                renderParachuteTable(parachuteData);
+            });
+        }
+
+        function renderParachuteTable(data, term = '') {
+            const tbody = document.getElementById('paraTableBody');
+            tbody.innerHTML = '';
+            if(data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:20px;">No matches found</td></tr>`;
+                return;
+            }
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600;">${highlight(item.title, term)}</td>
+                    <td>${highlight(item.dashboard, term)}</td>
+                    <td>${item.region}</td>
+                    <td>${item.database}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function highlight(text, term) {
+            if(!term) return text;
+            const re = new RegExp(`(${term})`, 'gi');
+            return text.replace(re, '<span class="para-highlight">$1</span>');
+        }
+
+        /* --- MyApps Logic --- */
+        function initMyApps() {
+            const container = document.getElementById('appLinksContainer');
+            const input = document.getElementById('appSearchInput');
+            
+            function render(list) {
+                container.innerHTML = '';
+                list.forEach(app => {
+                    const el = document.createElement('div');
+                    el.className = 'link-item';
+                    const grad = `linear-gradient(135deg, ${app.color} 0%, #1e293b 100%)`;
+                    el.innerHTML = `
+                        <a href="${app.url}" target="_blank" style="text-decoration:none; color:inherit;">
+                            <div class="img-container" style="background:${grad}">${app.initials}</div>
+                            <p>${app.title}</p>
+                        </a>
+                    `;
+                    container.appendChild(el);
+                });
+            }
+            render(myAppsData);
+            
+            input.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                render(myAppsData.filter(a => a.title.toLowerCase().includes(term)));
+            });
+        }
+
+        /* --- Docs Logic --- */
+        function initDocs() {
+            const input = document.getElementById('docSearchInput');
+            const btns = document.querySelectorAll('.doc-btn');
+            
+            input.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                btns.forEach(btn => {
+                    const txt = btn.getAttribute('data-title').toLowerCase();
+                    btn.style.display = txt.includes(term) ? 'flex' : 'none';
+                });
+            });
+
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const src = btn.getAttribute('data-pdf');
+                    const title = btn.getAttribute('data-title');
+                    document.getElementById('pdfFrame').src = src;
+                    document.getElementById('pdfViewerTitle').textContent = title;
+                    document.getElementById('pdfViewerModal').classList.add('show');
+                });
+            });
+        }
+
+        /* --- Calculator Logic --- */
+        function initCalculator() {
+            const ref = document.getElementById('calcRefDate');
+            const days = document.getElementById('calcDaysInput');
+            
+            // Set today
+            const now = new Date();
+            ref.value = now.toISOString().split('T')[0];
+            
+            function calc() {
+                const d = new Date(ref.value);
+                const offset = parseInt(days.value) || 0;
+                if(!ref.value) return;
+
+                const prior = new Date(d); prior.setDate(d.getDate() - offset);
+                const after = new Date(d); after.setDate(d.getDate() + offset);
+                
+                const fmt = date => date.toLocaleDateString('en-US');
+                const day = date => date.toLocaleDateString('en-US', { weekday: 'long' });
+
+                document.getElementById('calc-before-date').textContent = fmt(prior);
+                document.getElementById('calc-before-day').textContent = day(prior);
+                document.getElementById('calc-label-before').textContent = `${offset} Days Prior`;
+                
+                document.getElementById('calc-after-date').textContent = fmt(after);
+                document.getElementById('calc-after-day').textContent = day(after);
+                document.getElementById('calc-label-after').textContent = `${offset} Days After`;
+            }
+            
+            ref.addEventListener('change', calc);
+            days.addEventListener('input', calc);
+            calc();
+        }
+
+        window.copyCalcValue = function(id) {
+            const txt = document.getElementById(id).textContent;
+            copyToClipboard(txt);
+        };
+
+        /* --- Notes / Sidebar Logic --- */
+        function handleSaveAction() {
+            const val = document.getElementById('notepad').value;
+            if(!val.trim()) { showToast('Empty note', true); return; }
+            
+            const timestamp = new Date().toLocaleString();
+            
+            if(currentEditingId) {
+                const idx = notesData.findIndex(n => n.id === currentEditingId);
+                if(idx !== -1) {
+                    notesData[idx].content = val;
+                    notesData[idx].timestamp = timestamp;
+                }
+                cancelEditMode();
+                showToast('Note Updated');
+            } else {
+                notesData.unshift({
+                    id: Date.now(),
+                    content: val,
+                    timestamp: timestamp
+                });
+                showToast('Note Saved');
+                // Persist header pref
+                if(val.includes('Aerocare')) localStorage.setItem(HEADER_PREF_KEY, 'Aerocare');
+                else if(val.includes('OHH')) localStorage.setItem(HEADER_PREF_KEY, 'OHH');
+                else localStorage.setItem(HEADER_PREF_KEY, 'StLukes');
+                
+                document.getElementById('notepad').value = localStorage.getItem(HEADER_PREF_KEY);
+            }
+            
+            saveNotesToStorage();
+            updateTotalPatientCount();
+            if(document.getElementById('sidebar').classList.contains('active')) renderSidebar();
+        }
+
+        window.startEditing = function(id) {
+            const note = notesData.find(n => n.id === id);
+            if(!note) return;
+            currentEditingId = id;
+            document.getElementById('notepad').value = note.content;
+            document.getElementById('editorCard').classList.add('editing-mode');
+            document.getElementById('modeTitle').textContent = "Editing Note";
+            document.getElementById('modeTitle').style.color = "var(--primary)";
+            document.getElementById('saveBtn').textContent = "Update";
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+            if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+        };
+
+        window.cancelEditMode = function() {
+            currentEditingId = null;
+            document.getElementById('notepad').value = localStorage.getItem(HEADER_PREF_KEY) || "StLukes";
+            document.getElementById('editorCard').classList.remove('editing-mode');
+            document.getElementById('modeTitle').textContent = "New Entry";
+            document.getElementById('modeTitle').style.color = "var(--text-heading)";
+            document.getElementById('saveBtn').textContent = "Save Note";
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        };
+
+        window.deleteNote = function(id) {
+            if(!confirm('Delete this note?')) return;
+            notesData = notesData.filter(n => n.id !== id);
+            saveNotesToStorage();
+            renderSidebar(document.getElementById('searchInput').value);
+            updateTotalPatientCount();
+        };
+
+        function renderSidebar(filter = '') {
+            const list = document.getElementById('notesList');
+            list.innerHTML = '';
+            const filtered = notesData.filter(n => n.content.toLowerCase().includes(filter.toLowerCase()));
+            
+            if(filtered.length === 0) {
+                list.innerHTML = '<div style="text-align:center;color:var(--text-muted)">No records</div>';
+                return;
+            }
+
+            filtered.forEach(note => {
+                const div = document.createElement('div');
+                div.className = 'note-card';
+                div.onclick = (e) => { if(e.target === div || e.target.classList.contains('note-preview')) startEditing(note.id); };
+                div.innerHTML = `
+                    <div class="note-meta"><span>${note.timestamp.split(',')[0]}</span></div>
+                    <div class="note-preview">${escapeHtml(note.content)}</div>
+                    <div class="note-actions">
+                        <button class="action-btn" onclick="copyToClipboard(\`${escapeHtml(note.content).replace(/`/g, '\\`')}\`); event.stopPropagation();">C</button>
+                        <button class="action-btn delete" onclick="deleteNote(${note.id}); event.stopPropagation();">D</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        /* --- Abbreviation Logic --- */
+        function handleSpaceExpansion(input) {
+            const cursor = input.selectionStart;
+            const text = input.value;
+            const before = text.slice(0, cursor);
+            const match = /(\S+)\s$/.exec(before);
+            
+            if(match) {
+                const word = match[1];
+                const expansion = abbreviationList.find(a => a.abbr.toLowerCase() === word.toLowerCase());
+                if(expansion) {
+                    const newText = text.slice(0, match.index) + expansion.expansion + " " + text.slice(cursor);
+                    input.value = newText;
+                    input.selectionStart = input.selectionEnd = match.index + expansion.expansion.length + 1;
+                    autoResize(input);
+                }
+            }
+        }
+
+        /* --- Utilities --- */
+        function autoResize(el) {
+            el.style.height = 'auto';
+            el.style.height = (el.scrollHeight + 5) + 'px';
+        }
+
+        function updateActiveCounts() {
+            const txt = document.getElementById('notepad').value;
+            const ids = (txt.match(/\bPatient ID\s*(\d+)/gi) || []).length;
+            document.getElementById('activeCountEl').textContent = ids;
+        }
+
+        function updateTotalPatientCount() {
+            let total = 0;
+            notesData.forEach(n => {
+                total += (n.content.match(/\bPatient ID\s*(\d+)/gi) || []).length;
+            });
+            document.getElementById('totalSavedCountEl').textContent = total;
+        }
+
+        window.renderPatientIDsModal = function() {
+            const content = document.getElementById('patientIDsContent');
+            const allIds = [];
+            notesData.forEach(n => {
+                const matches = n.content.matchAll(/Patient ID\s*(\d+)/gi);
+                for (const m of matches) allIds.push(m[1]);
+            });
+            
+            if(allIds.length === 0) {
+                content.innerHTML = '<div style="padding:20px; text-align:center;">No IDs found.</div>';
+            } else {
+                content.innerHTML = `<div class="pid-grid">
+                    ${allIds.map(id => `<div class="pid-item" onclick="copyToClipboard('${id}')">${id}</div>`).join('')}
+                </div>`;
+            }
+            document.getElementById('patientIDsModal').classList.add('show');
+        };
+
+        window.copyAllIDs = function() {
+             const allIds = [];
+            notesData.forEach(n => {
+                const matches = n.content.matchAll(/Patient ID\s*(\d+)/gi);
+                for (const m of matches) allIds.push(m[1]);
+            });
+            if(allIds.length) copyToClipboard(allIds.join('\n'));
+            else showToast("No IDs", true);
+        };
+
+        window.exportData = function() {
+            if(!notesData.length) return showToast("No data");
+            const txt = notesData.map(n => n.content).join('\n\n___________________\n\n');
+            const blob = new Blob([txt], {type:'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `backup_${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+        };
+
+        function handleImport(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                const parts = evt.target.result.split('___________________');
+                parts.forEach(p => {
+                    if(p.trim()) notesData.unshift({id: Date.now()+Math.random(), content: p.trim(), timestamp: new Date().toLocaleString()});
+                });
+                saveNotesToStorage();
+                showToast(`Imported ${parts.length}`);
+                toggleSidebar();
+            };
+            reader.readAsText(file);
+        }
+
+        window.exportAbbreviations = function() {
+            const blob = new Blob([JSON.stringify(abbreviationList, null, 2)], {type:'application/json'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob); a.download = 'abbreviations.json'; a.click();
+        };
+
+        function handleAbbrImport(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                try {
+                    const d = JSON.parse(evt.target.result);
+                    if(Array.isArray(d)) {
+                        abbreviationList = d;
+                        localStorage.setItem(ABBR_KEY, JSON.stringify(d));
+                        showToast('Abbr Imported');
+                    }
+                } catch(e) { showToast('Invalid JSON', true); }
+            };
+            reader.readAsText(file);
+        }
+
+        /* --- Storage Helpers --- */
+        function saveNotesToStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(notesData)); }
+        function loadNotes() { try { notesData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { notesData = []; } }
+        function loadAbbreviations() { try { abbreviationList = JSON.parse(localStorage.getItem(ABBR_KEY)) || DEFAULT_ABBRS; } catch(e) { abbreviationList = DEFAULT_ABBRS; } }
+        
+        function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+        function copyToClipboard(txt) { navigator.clipboard.writeText(txt).then(() => showToast('Copied!')); }
+        function showToast(msg, warn=false) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = warn ? 'toast warning show' : 'toast show';
+            setTimeout(() => t.classList.remove('show'), 2000);
+        }
+
+    </script>
+</body>
+</html>
+
